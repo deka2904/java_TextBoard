@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -89,7 +90,35 @@ public class Main_Text {
             }
             else if (func.equals("list")) {
                 System.out.println("==================");
-                board_print();
+                // JDBC 연결 설정
+                Connection connection = DatabaseConnection.getConnection();
+                if (connection != null) {
+                    try {
+                        // SQL 쿼리를 사용하여 데이터베이스에서 게시물 목록을 가져옴
+                        String selectQuery = "SELECT * FROM text_board_ex";
+                        PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+                        // 위 쿼리는 매개 변수가 없으므로 매개 변수 설정은 필요 없음
+
+                        // 결과셋을 가져오기 위해 executeQuery를 사용
+                        ResultSet resultSet = preparedStatement.executeQuery();
+
+                        // 결과를 순회하면서 출력
+                        while (resultSet.next()) {
+                            int id = resultSet.getInt("id");
+                            String title = resultSet.getString("title");
+                            String detail = resultSet.getString("detail");
+
+                            // 가져온 결과를 출력
+                            board_print();
+                        }
+                        // 자원 해제
+                        resultSet.close();
+                        preparedStatement.close();
+                        connection.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
             else if (func.equals("update")) {
                 System.out.print("수정할 게시물 번호 : ");

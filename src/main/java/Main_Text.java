@@ -25,7 +25,14 @@ class Board {
 public class Main_Text {
     private static int number = 1;
     private static final ArrayList<Board> boardList = new ArrayList<>();
-
+    public static void  board_print(){
+        for (Board board : boardList) {
+            System.out.println("번호 : " + board.number);
+            System.out.println("제목 : " + board.title);
+            System.out.println("내용 : " + board.detail);
+            System.out.println("==================");
+        }
+    }
     // 수정, 삭제 공통 프로세스 공유
     public static int findIndex(int num){
         for (int i = 0; i < boardList.size(); i++) {
@@ -54,12 +61,7 @@ public class Main_Text {
             }
             else if (func.equals("list")) {
                 System.out.println("==================");
-                for (Board board : boardList) {
-                    System.out.println("번호 : " + board.number);
-                    System.out.println("제목 : " + board.title);
-                    System.out.println("내용 : " + board.detail);
-                    System.out.println("==================");
-                }
+                board_print();
             }
             else if (func.equals("update")) {
                 System.out.print("수정할 게시물 번호 : ");
@@ -94,12 +96,7 @@ public class Main_Text {
                         System.out.println("없는 게시물 번호입니다.");
                     }
                     System.out.println("==================");
-                    for (Board board : boardList) {
-                        System.out.println("번호 : " + board.number);
-                        System.out.println("제목 : " + board.title);
-                        System.out.println("내용 : " + board.detail);
-                        System.out.println("==================");
-                    }
+                    board_print();
                 }catch (Exception e){
                     System.out.println("올바른 번호 입력해 주세요");
                 }

@@ -1,3 +1,6 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -45,19 +48,44 @@ public class Main_Text {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         while(true) {
-            System.out.print("입력 : ");
+            System.out.print("명령어 : ");
             String func = scanner.nextLine();
 
-            Board new_Board = null;
             if (func.equals("add")) {
                 System.out.print("게시물 제목을 입력해주세요 : ");
                 String title = scanner.nextLine();
                 System.out.print("게시물 내용을 입력해주세요 : ");
                 String detail = scanner.nextLine();
-                new_Board = new Board(number, title, detail);
+                Board new_Board = new Board(number, title, detail);
                 boardList.add(new_Board);
-                System.out.println("게시물이 등록되었습니다.");
-                number++;
+//                System.out.println("게시물이 등록되었습니다.");
+                System.out.println(number);
+
+                // JDBC 연결 설정
+                Connection connection = DatabaseConnection.getConnection();
+                if (connection != null) {
+                    try {
+                        // SQL 쿼리를 사용하여 데이터베이스에 게시물 추가
+                        String insertQuery = "INSERT INTO text_board_ex (number, title, detail) VALUES (?, ?, ?)";
+                        PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+                        preparedStatement.setInt(1, number);
+                        preparedStatement.setString(2, title);
+                        preparedStatement.setString(3, detail);
+                        number++;
+
+                        int rowsAffected = preparedStatement.executeUpdate();
+                        if (rowsAffected > 0) {
+                            System.out.println("게시물이 등록되었습니다.");
+                        } else {
+                            System.out.println("게시물 등록에 실패했습니다.");
+                        }
+
+                        preparedStatement.close();
+                        connection.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
             else if (func.equals("list")) {
                 System.out.println("==================");

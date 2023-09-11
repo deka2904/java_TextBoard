@@ -23,6 +23,17 @@ class Board {
 }
 public class Main_Text {
     private static int number = 1;
+    public static int exam(int num){
+        ArrayList <Board> Boardlist = new ArrayList<>();
+        int index = -1;
+        for (int i = 0; i < Boardlist.size(); i++) {
+            if (Boardlist.get(i).getNumber() == num) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
     public static void main(String[] args) {
         ArrayList <Board> Boardlist = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
@@ -54,23 +65,17 @@ public class Main_Text {
                 System.out.print("수정할 게시물 번호 : ");
                 try{
                     int num = Integer.parseInt(scanner.nextLine());
-                    boolean found = false;
-                    for (Board board : Boardlist) {
-                        if (board.getNumber() == num) {
-                            System.out.print("새로운 게시물 제목을 입력해주세요 : ");
-                            String newTitle = scanner.nextLine();
-                            System.out.print("새로운 게시물 내용을 입력해주세요 : ");
-                            String newDetail = scanner.nextLine();
+                    int index = exam(num);
+                    if (index != -1) {
+                        System.out.print("새로운 게시물 제목을 입력해주세요 : ");
+                        String newTitle = scanner.nextLine();
+                        System.out.print("새로운 게시물 내용을 입력해주세요 : ");
+                        String newDetail = scanner.nextLine();
 
-                            board.setTitle(newTitle);   // 수정할 게시글 제목
-                            board.setDetail(newDetail); // 수정할 게시글 내용
-
-                            System.out.printf("%d번 게시물이 수정되었습니다.\n", num);
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
+                        Boardlist.get(index).setTitle(newTitle);   // 수정할 게시글 제목
+                        Boardlist.get(index).setDetail(newDetail); // 수정할 게시글 내용
+                        System.out.printf("%d번 게시물이 수정되었습니다.\n", index);
+                    } else {
                         System.out.println("없는 게시물 번호입니다.");
                     }
                 }catch (Exception e){
@@ -81,13 +86,7 @@ public class Main_Text {
                 System.out.print("삭제할 게시물 번호 : ");
                 try {
                     int num = Integer.parseInt(scanner.nextLine());
-                    int index = -1;
-                    for (int i = 0; i < Boardlist.size(); i++) {
-                        if (Boardlist.get(i).getNumber() == num) {
-                            index = i;
-                            break;
-                        }
-                    }
+                    int index = exam(num);
                     if (index != -1) {
                         Boardlist.remove(index);
                         System.out.printf("%d번 게시물이 삭제되었습니다.\n", num);

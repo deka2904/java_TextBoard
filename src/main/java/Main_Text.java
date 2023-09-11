@@ -67,11 +67,10 @@ public class Main_Text {
                 if (connection != null) {
                     try {
                         // SQL 쿼리를 사용하여 데이터베이스에 게시물 추가
-                        String insertQuery = "INSERT INTO text_board_ex (number, title, detail) VALUES (?, ?, ?)";
+                        String insertQuery = "INSERT INTO text_board_ex (title, detail) VALUES (?, ?)";
                         PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
-                        preparedStatement.setInt(1, number);
-                        preparedStatement.setString(2, title);
-                        preparedStatement.setString(3, detail);
+                        preparedStatement.setString(1, title);
+                        preparedStatement.setString(2, detail);
                         number++;
 
                         int rowsAffected = preparedStatement.executeUpdate();
@@ -88,8 +87,9 @@ public class Main_Text {
                     }
                 }
             }
-            else if (func.equals("list")) {
+            if (func.equals("list")) {
                 System.out.println("==================");
+                board_print();
                 // JDBC 연결 설정
                 Connection connection = DatabaseConnection.getConnection();
                 if (connection != null) {
@@ -109,8 +109,12 @@ public class Main_Text {
                             String detail = resultSet.getString("detail");
 
                             // 가져온 결과를 출력
-                            board_print();
+                            System.out.println("게시물 ID: " + id);
+                            System.out.println("게시물 제목: " + title);
+                            System.out.println("게시물 내용: " + detail);
+                            System.out.println("==================");
                         }
+
                         // 자원 해제
                         resultSet.close();
                         preparedStatement.close();
@@ -122,42 +126,106 @@ public class Main_Text {
             }
             else if (func.equals("update")) {
                 System.out.print("수정할 게시물 번호 : ");
-                try{
+                try {
                     int num = Integer.parseInt(scanner.nextLine());
-                    int index = findIndex(num);
-                    if (index != -1) {
-                        System.out.print("새로운 게시물 제목을 입력해주세요 : ");
-                        String newTitle = scanner.nextLine();
-                        System.out.print("새로운 게시물 내용을 입력해주세요 : ");
-                        String newDetail = scanner.nextLine();
 
-                        boardList.get(index).setTitle(newTitle);   // 수정할 게시글 제목
-                        boardList.get(index).setDetail(newDetail); // 수정할 게시글 내용
-                        System.out.printf("%d번 게시물이 수정되었습니다.\n", num);
-                    } else {
-                        System.out.println("없는 게시물 번호입니다.");
+                    // JDBC 연결 설정
+                    Connection connection = DatabaseConnection.getConnection();
+                    if (connection != null) {
+                        try {
+                            // SQL 쿼리를 사용하여 게시물을 가져옴
+                            String selectQuery = "SELECT * FROM text_board_ex WHERE number = ?";
+                            PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
+                            selectStatement.setInt(1, num);
+
+                            ResultSet resultSet = selectStatement.executeQuery();
+
+                            if (resultSet.next()) {
+                                System.out.print("새로운 게시물 제목을 입력해주세요 : ");
+                                String newTitle = scanner.nextLine();
+                                System.out.print("새로운 게시물 내용을 입력해주세요 : ");
+                                String newDetail = scanner.nextLine();
+
+                                // SQL UPDATE 쿼리 실행
+                                String updateQuery = "UPDATE text_board_ex SET title = ?, detail = ? WHERE number = ?";
+                                PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                                updateStatement.setString(1, newTitle);
+                                updateStatement.setString(2, newDetail);
+                                updateStatement.setInt(3, num);
+
+                                int updatedRows = updateStatement.executeUpdate();
+                                if (updatedRows > 0) {
+                                    System.out.printf("%d번 게시물이 수정되었습니다.\n", num);
+                                } else {
+                                    System.out.println("게시물 수정에 실패했습니다.");
+                                }
+
+                                updateStatement.close();
+                            } else {
+                                System.out.println("없는 게시물 번호입니다.");
+                            }
+
+                            resultSet.close();
+                            selectStatement.close();
+                            connection.close();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }catch (Exception e){
-                    System.out.println("올바른 번호 입력해 주세요");
+                } catch (NumberFormatException e) {
+                    System.out.println("올바른 번호를 입력해 주세요.");
                 }
             }
             else if (func.equals("delete")) {
                 System.out.print("삭제할 게시물 번호 : ");
                 try {
                     int num = Integer.parseInt(scanner.nextLine());
-                    int index = findIndex(num);
-                    if (index != -1) {
-                        boardList.remove(index);
-                        System.out.printf("%d번 게시물이 삭제되었습니다.\n", num);
-                    } else {
-                        System.out.println("없는 게시물 번호입니다.");
+
+                    // JDBC 연결 설정
+                    Connection connection = DatabaseConnection.getConnection();
+                    if (connection != null) {
+                        try {
+                            // SQL DELETE 쿼리 실행
+                            String deleteQuery = "DELETE FROM text_board_ex WHERE number = ?";
+                            PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
+                            deleteStatement.setInt(1, num);
+
+                            int deletedRows = deleteStatement.executeUpdate();
+                            if (deletedRows > 0) {
+                                System.out.printf("%d번 게시물이 삭제되었습니다.\n", num);
+
+                                // 삭제 후에 데이터 다시 가져와 출력
+                                String selectQuery = "SELECT * FROM text_board_ex";
+                                PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+                                ResultSet resultSet = preparedStatement.executeQuery();
+
+                                // 결과를 순회하면서 출력
+                                while (resultSet.next()) {
+                                    int number = resultSet.getInt("number");
+                                    String title = resultSet.getString("title");
+                                    String detail = resultSet.getString("detail");
+
+                                    // 결과를 출력
+                                    System.out.println("번호 : " + number);
+                                    System.out.println("제목 : " + title);
+                                    System.out.println("내용 : " + detail);
+                                    System.out.println("==================");
+                                }
+                            } else {
+                                System.out.println("게시물 삭제에 실패했습니다. 해당 번호를 찾을 수 없습니다.");
+                            }
+
+                            deleteStatement.close();
+                            connection.close();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    System.out.println("==================");
-                    board_print();
-                }catch (Exception e){
-                    System.out.println("올바른 번호 입력해 주세요");
+                } catch (NumberFormatException e) {
+                    System.out.println("올바른 번호를 입력해 주세요.");
                 }
             }
+
             else if (func.equals("exit")) {
                 System.out.println("프로그램을 종료합니다.");
                 break;

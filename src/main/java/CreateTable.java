@@ -11,8 +11,7 @@ public class CreateTable {
                 statement = connection.createStatement();
 
                 String createTableSQL = "CREATE TABLE IF NOT EXISTS text_board_ex (" +
-                        "id INT AUTO_INCREMENT PRIMARY KEY," +
-                        "number INT," +
+                        "number INT AUTO_INCREMENT PRIMARY KEY," +
                         "title VARCHAR(255)," +
                         "detail TEXT)";
 

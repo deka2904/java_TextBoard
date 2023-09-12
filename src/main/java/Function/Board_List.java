@@ -6,12 +6,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import static Function.Main_Text.connection;
 
 public class Board_List {
     public void list(){
         System.out.println("==================");
         // JDBC 연결 설정
-        Connection connection = DatabaseConnection.getConnection();
         if (connection != null) {
             try {
                 // SQL 쿼리를 사용하여 데이터베이스에서 게시물 목록을 가져옴

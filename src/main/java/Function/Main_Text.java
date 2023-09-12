@@ -1,6 +1,7 @@
 package Function;
 
 import Function.*;
+import SQL.DatabaseConnection;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import java.util.Scanner;
 public class Main_Text {
     static final ArrayList<Article> boardList = new ArrayList<>();
     static int number = 1;
+    public static Connection connection = DatabaseConnection.getConnection();
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         // sign 클래스 호출

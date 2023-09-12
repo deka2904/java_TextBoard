@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+import static Function.Main_Text.connection;
 
 public class Board_Detail {
     public void detail(){
@@ -15,7 +16,6 @@ public class Board_Detail {
         try {
             int num = Integer.parseInt(scanner.nextLine());
             // JDBC 연결 설정
-            Connection connection = DatabaseConnection.getConnection();
             if (connection != null) {
                 try {
                     // SQL SELECT 쿼리 실행

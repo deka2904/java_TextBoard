@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import static Function.Main_Text.connection;
+
 public class Board_Add {
     Scanner scanner = new Scanner(System.in);
     public void Add(){
@@ -16,7 +18,6 @@ public class Board_Add {
         Main_Text.boardList.add(new_Board);
 
         // JDBC 연결 설정
-        Connection connection = DatabaseConnection.getConnection();
         if (connection != null) {
             try {
                 // SQL 쿼리를 사용하여 데이터베이스에 게시물 추가

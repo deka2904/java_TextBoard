@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+import static Function.Main_Text.connection;
 
 public class Board_Delete {
     public void delete(){
@@ -16,7 +17,6 @@ public class Board_Delete {
             int num = Integer.parseInt(scanner.nextLine());
 
             // JDBC 연결 설정
-            Connection connection = DatabaseConnection.getConnection();
             if (connection != null) {
                 try {
                     // SQL DELETE 쿼리 실행

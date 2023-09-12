@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+import static Function.Main_Text.connection;
 
 public class Board_Search {
     public void search(){
@@ -15,7 +16,6 @@ public class Board_Search {
         String keyword = scanner.nextLine();
 
         // JDBC 연결 설정
-        Connection connection = DatabaseConnection.getConnection();
         if (connection != null) {
             try {
                 // SQL 쿼리를 사용하여 키워드 검색

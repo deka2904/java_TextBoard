@@ -36,6 +36,7 @@ public class Main_Text {
                     System.out.println("올바른 메뉴를 선택하세요.");
                     break;
             }
+
             if (nickname.equals(nickname)) {
                 while (true) {
                     // 로그인 성공

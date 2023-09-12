@@ -13,7 +13,9 @@ public class CreateTable {
                 String createTableSQL = "CREATE TABLE IF NOT EXISTS text_board_ex (" +
                         "number INT AUTO_INCREMENT PRIMARY KEY," +
                         "title VARCHAR(255)," +
-                        "detail TEXT)";
+                        "contents TEXT," +
+                        "view_count INT DEFAULT 0," +
+                        "time TIMESTAMP DEFAULT NOW())";
 
                 statement.executeUpdate(createTableSQL);
                 System.out.println("Table created successfully");

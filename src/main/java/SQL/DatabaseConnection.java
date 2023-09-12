@@ -23,7 +23,6 @@ public class DatabaseConnection {
         // 접속
         try {
             connection = DriverManager.getConnection("jdbc:mysql://" + server + "/" + "text_board", user_name, password);
-//            System.out.println("연결 완료!");
         } catch (SQLException e) {
             System.err.println("연결 오류" + e.getMessage());
             e.printStackTrace();

@@ -17,6 +17,7 @@ public class Main_Text {
         while(true) {
             System.out.print("명령어 : ");
             String func = scanner.nextLine();
+            // 게시글 추가
             if (func.equals("add")) {
                 System.out.print("게시물 제목을 입력해주세요 : ");
                 String title = scanner.nextLine();
@@ -30,7 +31,7 @@ public class Main_Text {
                 if (connection != null) {
                     try {
                         // SQL 쿼리를 사용하여 데이터베이스에 게시물 추가
-                        String insertQuery = "INSERT INTO text_board_ex (title, contents, time) VALUES (?, ?, NOW())";
+                        String insertQuery = "INSERT INTO text_board (title, contents, time) VALUES (?, ?, NOW())";
                         PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
                         preparedStatement.setString(1, title);
                         preparedStatement.setString(2, contents);
@@ -51,6 +52,8 @@ public class Main_Text {
                     }
                 }
             }
+            
+            // 게시글 전체 제목 조회
             else if (func.equals("list")) {
                 System.out.println("==================");
                // JDBC 연결 설정
@@ -58,7 +61,7 @@ public class Main_Text {
                 if (connection != null) {
                     try {
                         // SQL 쿼리를 사용하여 데이터베이스에서 게시물 목록을 가져옴
-                        String selectQuery = "SELECT * FROM text_board_ex";
+                        String selectQuery = "SELECT * FROM text_board";
                         PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
                         // 위 쿼리는 매개 변수가 없으므로 매개 변수 설정은 필요 없음
 
@@ -70,10 +73,12 @@ public class Main_Text {
                             int number = resultSet.getInt("number");
                             String title = resultSet.getString("title");
                             String time = resultSet.getString("time");
+                            int viewCount = resultSet.getInt("view_count");
                             // 가져온 결과를 출력
-                            System.out.println("번호: " + number);
-                            System.out.println("제목: " + title);
+                            System.out.println("게시글 번호: " + number);
+                            System.out.println("게시글 제목: " + title);
                             System.out.println("시간: " + time);
+                            System.out.println("조회수: " + viewCount);
                             System.out.println("==================");
                         }
 
@@ -86,6 +91,8 @@ public class Main_Text {
                     }
                 }
             }
+            
+            // 게시글 업데이트
             else if (func.equals("update")) {
                 System.out.print("수정할 게시물 번호 : ");
                 try {
@@ -96,7 +103,7 @@ public class Main_Text {
                     if (connection != null) {
                         try {
                             // SQL 쿼리를 사용하여 게시물을 가져옴
-                            String selectQuery = "SELECT * FROM text_board_ex WHERE number = ?";
+                            String selectQuery = "SELECT * FROM text_board WHERE number = ?";
                             PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
                             selectStatement.setInt(1, num);
 
@@ -109,7 +116,7 @@ public class Main_Text {
                                 String newContents = scanner.nextLine();
 
                                 // SQL UPDATE 쿼리 실행
-                                String updateQuery = "UPDATE text_board_ex SET title = ?, contents = ?, time = NOW() WHERE number = ?";
+                                String updateQuery = "UPDATE text_board SET title = ?, contents = ?, time = NOW() WHERE number = ?";
                                 PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
                                 updateStatement.setString(1, newTitle);
                                 updateStatement.setString(2, newContents);
@@ -138,6 +145,8 @@ public class Main_Text {
                     System.out.println("올바른 번호를 입력해 주세요.");
                 }
             }
+            
+            // 게시글 삭제
             else if (func.equals("delete")) {
                 System.out.print("삭제할 게시물 번호 : ");
                 try {
@@ -148,7 +157,7 @@ public class Main_Text {
                     if (connection != null) {
                         try {
                             // SQL DELETE 쿼리 실행
-                            String deleteQuery = "DELETE FROM text_board_ex WHERE number = ?";
+                            String deleteQuery = "DELETE FROM text_board WHERE number = ?";
                             PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
                             deleteStatement.setInt(1, num);
 
@@ -157,7 +166,7 @@ public class Main_Text {
                                 System.out.printf("%d번 게시물이 삭제되었습니다.\n", num);
 
                                 // 삭제 후에 데이터 다시 가져와 출력
-                                String selectQuery = "SELECT * FROM text_board_ex";
+                                String selectQuery = "SELECT * FROM text_board";
                                 PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
                                 ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -184,17 +193,18 @@ public class Main_Text {
                     System.out.println("올바른 번호를 입력해 주세요.");
                 }
             }
+            
+            // 게시글 제목으로 조회
             else if (func.equals("detail")) {
                 System.out.print("상세보기 할 게시물 번호를 입력해주세요 : ");
                 try {
                     int num = Integer.parseInt(scanner.nextLine());
-
                     // JDBC 연결 설정
                     Connection connection = DatabaseConnection.getConnection();
                     if (connection != null) {
                         try {
                             // SQL SELECT 쿼리 실행
-                            String selectContentsQuery = "SELECT * FROM text_board_ex WHERE number = ?";
+                            String selectContentsQuery = "SELECT * FROM text_board WHERE number = ?";
                             PreparedStatement selectContentsStatement = connection.prepareStatement(selectContentsQuery);
                             selectContentsStatement.setInt(1, num);
 
@@ -212,15 +222,15 @@ public class Main_Text {
                                 viewCount++;
 
                                 // 가져온 결과를 출력
-                                System.out.println("번호: " + number);
-                                System.out.println("제목: " + title);
-                                System.out.println("내용: " + contents);
+                                System.out.println("게시글 번호: " + number);
+                                System.out.println("게시글 제목: " + title);
+                                System.out.println("게시글 내용: " + contents);
                                 System.out.println("시간: " + time);
-                                System.out.println("현재 조회수: " + viewCount);
+                                System.out.println("조회수: " + viewCount);
                                 System.out.println("==================");
 
                                 // 조회수 업데이트
-                                String updateViewCountQuery = "UPDATE text_board_ex SET view_count = ? WHERE number = ?";
+                                String updateViewCountQuery = "UPDATE text_board SET view_count = ? WHERE number = ?";
                                 PreparedStatement updateViewCountStatement = connection.prepareStatement(updateViewCountQuery);
                                 updateViewCountStatement.setInt(1, viewCount);
                                 updateViewCountStatement.setInt(2, num);
@@ -231,6 +241,30 @@ public class Main_Text {
                                 selectContentsStatement.close();
                                 updateViewCountStatement.close();
                                 connection.close();
+
+                                Outter: // 외부 무한루프
+                                while (true){
+                                    System.out.print("상세보기 기능을 선택해주세요(1. 댓글 등록, 2. 추천, 3. 수정, 4. 삭제, 5. 목록으로): ");
+                                    int function = Integer.parseInt(scanner.nextLine());
+                                    switch (function) {
+                                        case 1:
+                                            System.out.println("[댓글 기능]");
+                                            break;
+                                        case 2:
+                                            System.out.println("[추천 기능]");
+                                            break;
+                                        case 3:
+                                            System.out.println("[수정 기능]");
+                                            break;
+                                        case 4:
+                                            System.out.println("[삭제 기능]");
+                                            break;
+                                        case 5:
+                                             break Outter;  // 외부로 빠져나감
+                                        default:
+                                            System.out.println("잘못된 입력입니다.");
+                                    }
+                                }
                             } else {
                                 System.out.println("해당 번호의 게시물을 찾을 수 없습니다.");
                             }
@@ -242,6 +276,8 @@ public class Main_Text {
                     System.out.println("올바른 번호를 입력해 주세요.");
                 }
             }
+            
+            // 게시글 키워드 검색 후 조회
             else if (func.equals("search")) {
                 System.out.print("검색 키워드를 입력해주세요: ");
                 String keyword = scanner.nextLine();
@@ -251,7 +287,7 @@ public class Main_Text {
                 if (connection != null) {
                     try {
                         // SQL 쿼리를 사용하여 키워드 검색
-                        String selectQuery = "SELECT * FROM text_board_ex WHERE title LIKE ?";
+                        String selectQuery = "SELECT * FROM text_board WHERE title LIKE ?";
                         PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
                         selectStatement.setString(1, "%" + keyword + "%");
 
@@ -277,6 +313,8 @@ public class Main_Text {
                     }
                 }
             }
+
+            // 종료
             else if (func.equals("exit")) {
                 System.out.println("프로그램을 종료합니다.");
                 break;

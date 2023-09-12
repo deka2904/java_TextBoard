@@ -1,13 +1,12 @@
 package Function;
 
-import Function.*;
 import SQL.DatabaseConnection;
 
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main_Text {
+public class Main_textboard {
     static final ArrayList<Article> boardList = new ArrayList<>();
     static int number = 1;
     public static Connection connection = DatabaseConnection.getConnection();

@@ -1,12 +1,9 @@
 package Function;
 
-import SQL.DatabaseConnection;
-
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import static Function.Main_Text.connection;
+import static Function.Main_textboard.connection;
 
 public class Board_List {
     public void list(){

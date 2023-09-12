@@ -1,11 +1,9 @@
 package Function;
-import SQL.DatabaseConnection;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-import static Function.Main_Text.connection;
+import static Function.Main_textboard.connection;
 
 public class Board_Add {
     Scanner scanner = new Scanner(System.in);
@@ -14,8 +12,8 @@ public class Board_Add {
         String title = scanner.nextLine();
         System.out.print("게시물 내용을 입력해주세요 : ");
         String contents = scanner.nextLine();
-        Article new_Board = new Article(Main_Text.number, title, contents);
-        Main_Text.boardList.add(new_Board);
+        Article new_Board = new Article(Main_textboard.number, title, contents);
+        Main_textboard.boardList.add(new_Board);
 
         // JDBC 연결 설정
         if (connection != null) {
@@ -26,7 +24,7 @@ public class Board_Add {
                 preparedStatement.setString(1, title);
                 preparedStatement.setString(2, contents);
 
-                Main_Text.number++;
+                Main_textboard.number++;
 
                 int rowsAffected = preparedStatement.executeUpdate();
                 if (rowsAffected > 0) {

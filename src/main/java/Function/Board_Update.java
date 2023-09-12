@@ -7,7 +7,7 @@ import java.util.Scanner;
 import static Function.Main_textboard.connection;
 
 public class Board_Update {
-    public void update(){
+    public void update() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("수정할 게시물 번호 : ");
         try {
@@ -50,7 +50,7 @@ public class Board_Update {
 
                     resultSet.close();
                     selectStatement.close();
-                    connection.close();
+                    // Do not close the connection here.
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

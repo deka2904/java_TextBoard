@@ -29,6 +29,7 @@ public class Board_Detail {
                     // 결과셋을 가져오기 위해 executeQuery를 사용
                     ResultSet resultSet = selectContentsStatement.executeQuery();
 
+                    PreparedStatement updateViewCountStatement = null;
                     if (resultSet.next()) {
                         int number = resultSet.getInt("number");
                         String title = resultSet.getString("title");
@@ -61,16 +62,10 @@ public class Board_Detail {
 
                         // 조회수 업데이트
                         String updateViewCountQuery = "UPDATE text_board SET view_count = ? WHERE number = ?";
-                        PreparedStatement updateViewCountStatement = connection.prepareStatement(updateViewCountQuery);
+                        updateViewCountStatement = connection.prepareStatement(updateViewCountQuery);
                         updateViewCountStatement.setInt(1, viewCount);
                         updateViewCountStatement.setInt(2, num);
                         updateViewCountStatement.executeUpdate();
-
-                        // 자원 해제
-                        resultSet.close();
-                        selectContentsStatement.close();
-                        updateViewCountStatement.close();
-                        connection.close();
 
                         Outter:
                         // 외부 무한루프
@@ -171,6 +166,11 @@ public class Board_Detail {
                     } else {
                         System.out.println("해당 번호의 게시물을 찾을 수 없습니다.");
                     }
+                    // 자원 해제
+                    resultSet.close();
+                    selectContentsStatement.close();
+                    updateViewCountStatement.close();
+                    connection.close();
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }

@@ -7,7 +7,7 @@ import java.util.Scanner;
 import static Function.Main_textboard.connection;
 
 public class Board_Search {
-    public void search(){
+    public void search() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("검색 키워드를 입력해주세요: ");
         String keyword = scanner.nextLine();
@@ -36,7 +36,7 @@ public class Board_Search {
                 // 자원 해제
                 resultSet.close();
                 selectStatement.close();
-                connection.close();
+                // Do not close the connection here.
             } catch (SQLException e) {
                 e.printStackTrace();
             }

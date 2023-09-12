@@ -7,7 +7,7 @@ import java.util.Scanner;
 import static Function.Main_textboard.connection;
 
 public class Board_Delete {
-    public void delete(){
+    public void delete() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("삭제할 게시물 번호 : ");
         try {
@@ -44,7 +44,6 @@ public class Board_Delete {
                         System.out.println("게시물 삭제에 실패했습니다. 해당 번호를 찾을 수 없습니다.");
                     }
                     deleteStatement.close();
-                    connection.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

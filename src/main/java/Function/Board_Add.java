@@ -34,7 +34,7 @@ public class Board_Add {
                 }
 
                 preparedStatement.close();
-                connection.close();
+                // Do not close the connection here.
             } catch (SQLException e) {
                 e.printStackTrace();
             }

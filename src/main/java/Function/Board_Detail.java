@@ -114,8 +114,6 @@ public class Board_Detail {
                                                 contents = resultSet.getString("contents");
                                                 time = resultSet.getString("time");
                                                 viewCount = resultSet.getInt("view_count");
-                                                comment = resultSet.getString("comment");
-                                                comment_time = resultSet.getString("comment_time");
 
                                                 // 가져온 결과를 출력
                                                 System.out.println("게시글 번호: " + number);

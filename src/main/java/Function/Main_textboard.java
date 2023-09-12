@@ -17,7 +17,7 @@ public class Main_textboard {
         Sign sign = new Sign();
         // JDBC 연결 설정
         Connection connection;
-        System.out.println("[[------게시판------]]");
+        System.out.println("[[----------게시판----------]]");
 
         while (true) {
             System.out.println("[1. 회원가입 2. 로그인 3. 종료]");

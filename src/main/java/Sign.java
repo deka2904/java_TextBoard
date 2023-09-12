@@ -12,8 +12,6 @@ public class Sign {
 
     // 회원가입
     public void sign_in() {
-        System.out.println("sign_in");
-
         System.out.print("아이디를 입력해주세요: ");
         String id = scanner.nextLine();
 
@@ -82,8 +80,6 @@ public class Sign {
     }
     // 로그인
     public String login(){
-        System.out.println("login");
-
         System.out.print("아이디를 입력해주세요: ");
         String id = scanner.nextLine();
         System.out.print("패스워드를 입력해주세요: ");
@@ -117,6 +113,6 @@ public class Sign {
     }
     // 로그아웃
     public void logout(){
-        System.out.println("logout");
+        System.out.println("로그아웃 합니다.");
     }
 }

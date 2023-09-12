@@ -424,8 +424,8 @@ public class Main_Text {
                         }
                     }
                     // 종료
-                    else if (func.equals("exit")) {
-                        System.out.println("프로그램을 종료합니다.");
+                    else if (func.equals("logout")) {
+                        sign.logout();
                         break;
                     }
                 }

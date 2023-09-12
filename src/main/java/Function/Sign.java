@@ -83,37 +83,56 @@ public class Sign {
         }
     }
     // 로그인
-    public String login(){
-        System.out.print("아이디를 입력해주세요: ");
-        String id = scanner.nextLine();
-        System.out.print("패스워드를 입력해주세요: ");
-        String pw = scanner.nextLine();
+    public String login() {
+        boolean logIn = false;
+        String nickname = "";
+
+        // JDBC 연결 설정 (open the connection once)
+        Connection connection = null;
         try {
-            // JDBC 연결 설정
             connection = DatabaseConnection.getConnection();
-
-            // 아이디와 패스워드로 회원 조회
-            String memberCheckQuery = "SELECT * FROM member WHERE id = ? AND password = ?";
-            PreparedStatement memberCheckStatement = connection.prepareStatement(memberCheckQuery);
-            memberCheckStatement.setString(1, id);
-            memberCheckStatement.setString(2, pw);
-
-            ResultSet resultSet = memberCheckStatement.executeQuery();
-
-            if (resultSet.next()) {
-                // 로그인 성공
-                String nickname = resultSet.getString("nickname"); // 닉네임을 가져옴
-                System.out.println("로그인 성공!");
-                return nickname;
-            } else {
-                // 로그인 실패: 아이디 또는 패스워드가 일치하지 않음
-                System.out.println("존재하지 않은 회원입니다.");
-                return "";
-            }
         } catch (Exception e) {
             System.out.println("오류 발생: " + e.getMessage());
             return "";
         }
+        do {
+            System.out.print("아이디를 입력해주세요: ");
+            String id = scanner.nextLine();
+            System.out.print("패스워드를 입력해주세요: ");
+            String pw = scanner.nextLine();
+
+            try {
+                // 아이디와 패스워드로 회원 조회
+                String memberCheckQuery = "SELECT * FROM member WHERE id = ? AND password = ?";
+                PreparedStatement memberCheckStatement = connection.prepareStatement(memberCheckQuery);
+                memberCheckStatement.setString(1, id);
+                memberCheckStatement.setString(2, pw);
+
+                ResultSet resultSet = memberCheckStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    // 로그인 성공
+                    nickname = resultSet.getString("nickname"); // 닉네임을 가져옴
+                    System.out.println("로그인 성공!");
+                    logIn = true;
+                } else {
+                    // 로그인 실패: 아이디 또는 패스워드가 일치하지 않음
+                    System.out.println("존재하지 않은 회원입니다.\n다시 시도해주세요.");
+                }
+            } catch (SQLException e) {
+                System.out.println("오류 발생: " + e.getMessage());
+            }
+        } while (!logIn);
+
+        // Close the connection after all login attempts
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nickname;
     }
     // 로그아웃
     public void logout(){

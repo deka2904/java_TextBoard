@@ -47,9 +47,7 @@ public class Board_List {
                     if (preparedStatement != null) {
                         preparedStatement.close();
                     }
-                    if (connection != null) {
-                        connection.close();
-                    }
+                    // Do not close the connection here.
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

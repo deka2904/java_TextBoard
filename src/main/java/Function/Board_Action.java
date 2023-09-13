@@ -325,7 +325,7 @@ public class Board_Action implements Action {
                     updateViewCountStatement.close();
                     resultSet.close();
                 }catch (SQLException e) {
-                    // 발생할 수 있는 SQLException 처리
+                    System.out.println("해당 번호의 게시물을 찾을 수 없습니다.");
                 } finally {
                     try {
                         if (connection != null) {

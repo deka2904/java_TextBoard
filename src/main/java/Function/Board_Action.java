@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Board_Action implements Action {
     private Connection connection;
     private final Scanner scanner;
-    private PreparedStatement idCheckStatement;
+    private ResultSet resultSet;
     private PreparedStatement preparedStatement;
 
     public Board_Action() {
@@ -34,7 +34,7 @@ public class Board_Action implements Action {
             try {
                 // SQL 쿼리를 사용하여 데이터베이스에 게시물 추가
                 String insertQuery = "INSERT INTO text_board (title, contents, time) VALUES (?, ?, NOW())";
-                PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+                preparedStatement = connection.prepareStatement(insertQuery);
                 preparedStatement.setString(1, title);
                 preparedStatement.setString(2, contents);
 
@@ -75,8 +75,8 @@ public class Board_Action implements Action {
 
                         // 삭제 후에 데이터 다시 가져와 출력
                         String selectQuery = "SELECT * FROM text_board";
-                        PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
-                        ResultSet resultSet = preparedStatement.executeQuery();
+                        preparedStatement = connection.prepareStatement(selectQuery);
+                        resultSet = preparedStatement.executeQuery();
 
                         // 결과를 순회하면서 출력
                         while (resultSet.next()) {
@@ -119,7 +119,7 @@ public class Board_Action implements Action {
                     selectContentsStatement.setInt(1, num);
 
                     // 결과셋을 가져오기 위해 executeQuery를 사용
-                    ResultSet resultSet = selectContentsStatement.executeQuery();
+                    resultSet = selectContentsStatement.executeQuery();
 
                     PreparedStatement updateViewCountStatement = null;
                     if (resultSet.next()) {
@@ -215,8 +215,6 @@ public class Board_Action implements Action {
     @Override
     public void list(){
         System.out.println("==================");
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
 
         // JDBC 연결 설정
         if (connection != null) {
@@ -244,7 +242,7 @@ public class Board_Action implements Action {
                 }
 
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.out.println("Error" + e);
             } finally {
                 try {
                     // 자원 해제
@@ -263,7 +261,6 @@ public class Board_Action implements Action {
     }
     @Override
     public void search(){
-        Scanner scanner = new Scanner(System.in);
         System.out.print("검색 키워드를 입력해주세요: ");
         String keyword = scanner.nextLine();
 
@@ -275,7 +272,7 @@ public class Board_Action implements Action {
                 PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
                 selectStatement.setString(1, "%" + keyword + "%");
 
-                ResultSet resultSet = selectStatement.executeQuery();
+                resultSet = selectStatement.executeQuery();
                 // 결과를 순회하면서 출력
                 while (resultSet.next()) {
                     int number = resultSet.getInt("number");
@@ -312,7 +309,7 @@ public class Board_Action implements Action {
                     PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
                     selectStatement.setInt(1, num);
 
-                    ResultSet resultSet = selectStatement.executeQuery();
+                    resultSet = selectStatement.executeQuery();
 
                     if (resultSet.next()) {
                         System.out.print("새로운 게시물 제목을 입력해주세요 : ");
@@ -352,6 +349,7 @@ public class Board_Action implements Action {
     }
     @Override
     public void sign_in(){
+        PreparedStatement idCheckStatement = null;
         System.out.print("아이디를 입력해주세요: ");
         String id = scanner.nextLine();
 
@@ -361,7 +359,7 @@ public class Board_Action implements Action {
             idCheckStatement = connection.prepareStatement(idCheckQuery);
             idCheckStatement.setString(1, id);
 
-            ResultSet resultSet = idCheckStatement.executeQuery();
+            resultSet = idCheckStatement.executeQuery();
 
             if (resultSet.next()) {
                 // 아이디가 이미 존재하는 경우
@@ -380,7 +378,7 @@ public class Board_Action implements Action {
                     if (pw1.equals(pw2)){
                         // SQL 쿼리를 사용하여 데이터베이스에 회원 정보 추가
                         String insertQuery = "INSERT INTO member (id, password, nickname) VALUES (?, ?, ?)";
-                        PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+                        preparedStatement = connection.prepareStatement(insertQuery);
                         preparedStatement.setString(1, id);
                         preparedStatement.setString(2, pw1);
                         preparedStatement.setString(3, nickname);
@@ -421,7 +419,6 @@ public class Board_Action implements Action {
         String nickname = "";
 
         // JDBC 연결 설정 (open the connection once)
-        Connection connection = null;
         try {
             connection = DatabaseConnection.getConnection();
         } catch (Exception e) {
@@ -441,7 +438,7 @@ public class Board_Action implements Action {
                 memberCheckStatement.setString(1, id);
                 memberCheckStatement.setString(2, pw);
 
-                ResultSet resultSet = memberCheckStatement.executeQuery();
+                resultSet = memberCheckStatement.executeQuery();
 
                 if (resultSet.next()) {
                     // 로그인 성공

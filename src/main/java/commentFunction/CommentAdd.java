@@ -68,6 +68,7 @@ public class CommentAdd {
                 // 자원 해제
                 resultSet.close();
                 selectContentsStatement.close();
+                connection.close();
             } else {
                 System.out.println("해당 번호의 게시물을 찾을 수 없습니다.");
             }

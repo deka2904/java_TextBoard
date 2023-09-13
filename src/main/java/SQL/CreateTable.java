@@ -7,10 +7,11 @@ import java.sql.Statement;
 public class CreateTable {
     public static void main(String[] args) {
         Connection connection = DatabaseConnection.getConnection();
-
         if (connection != null){
+            Statement statement;
             try{
-                Statement statement = connection.createStatement();
+                statement = connection.createStatement();
+
                 // 회원 테이블
                 String createMemberTableSQL = "CREATE TABLE IF NOT EXISTS member(" +
                         "id VARCHAR(255) PRIMARY KEY," +
@@ -39,6 +40,7 @@ public class CreateTable {
                         "member_nickname VARCHAR(255)," + // 외래 키로 사용할 회원의 닉네임
                         "FOREIGN KEY (board_number) REFERENCES text_board(number)," +
                         "FOREIGN KEY (member_nickname) REFERENCES member(nickname))";
+
 
                 statement.executeUpdate(createMemberTableSQL);
                 statement.executeUpdate(createTableSQL);

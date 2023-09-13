@@ -1,5 +1,6 @@
-package Function;
+package Main;
 
+import Function.*;
 import SQL.DatabaseConnection;
 
 import java.sql.Connection;
@@ -7,16 +8,14 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main_textboard {
-    static final ArrayList<Article> boardList = new ArrayList<>();
-    static int number = 1;
-    public static Connection connection = DatabaseConnection.getConnection();
+    public static final ArrayList<Article> boardList = new ArrayList<>();
+    public static int number = 1;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         // sign 클래스 호출
         Sign sign = new Sign();
-        // JDBC 연결 설정
-        Connection connection;
+
         System.out.println("[[----------게시판----------]]");
 
         while (true) {
@@ -45,35 +44,36 @@ public class Main_textboard {
                     // 로그인 성공
                     System.out.print("명령어(" + nickname + "): ");
                     String func = scanner.nextLine();
+                    Action action;
                     // 게시글 추가
                     if (func.equals("add")) {
-                        Board_Add add = new Board_Add();
-                        add.Add();
+                        action = new Board_Action();
+                        action.add();
                     }
                     // 게시글 전체 제목 조회
                     else if (func.equals("list")) {
-                        Board_List board_list = new Board_List();
-                        board_list.list();
+                        action = new Board_Action();
+                        action.list();
                     }
                     // 게시글 업데이트
                     else if (func.equals("update")) {
-                        Board_Update board_update = new Board_Update();
-                        board_update.update();
+                        action = new Board_Action();
+                        action.update();
                     }
                     // 게시글 삭제
                     else if (func.equals("delete")) {
-                        Board_Delete board_delete = new Board_Delete();
-                        board_delete.delete();
+                        action = new Board_Action();
+                        action.delete();
                     }
                     // 게시글 제목으로 조회
                     else if (func.equals("detail")) {
-                       Board_Detail board_detail = new Board_Detail();
-                       board_detail.detail();
+                        action = new Board_Action();
+                        action.detail();
                     }
                     // 게시글 키워드 검색 후 조회
                     else if (func.equals("search")) {
-                        Board_Search board_search = new Board_Search();
-                        board_search.search();
+                        action = new Board_Action();
+                        action.search();
                     }
                     // 종료
                     else if (func.equals("logout")) {

@@ -26,8 +26,10 @@ public class CreateTable {
                         "comment TEXT," +
                         "comment_suggestion INT DEFAULT 0," +
                         "comment_time TIMESTAMP DEFAULT NOW()," +
-                        "board_number INT," + // 외래 키 추가
-                        "FOREIGN KEY (board_number) REFERENCES text_board(number))"; // 외래 키 제약 조건 추가
+                        "board_number INT," +           // 외래 키로 사용할 게시판 번호
+                        "member_id VARCHAR(255)," +     // 외래 키로 사용할 회원의 ID
+                        "FOREIGN KEY (board_number) REFERENCES text_board(number)," +
+                        "FOREIGN KEY (member_id) REFERENCES member(id))"; // 회원 테이블의 ID와 연결
 
                 // 회원 테이블
                 String createMemberTableSQL = "CREATE TABLE IF NOT EXISTS member("+

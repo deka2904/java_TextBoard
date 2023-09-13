@@ -292,7 +292,7 @@ public class Board_Action implements Action {
                                         break;
                                     case 2:
                                         Comment_Recommend comment_recommend = new Comment_Recommend();
-                                        comment_recommend.commentrecommend(num);
+                                        comment_recommend.commentrecommend(num, nickname);
                                         break;
                                     case 3:
                                         Comment_Update comment_update = new Comment_Update();

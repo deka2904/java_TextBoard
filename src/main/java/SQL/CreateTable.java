@@ -13,12 +13,11 @@ public class CreateTable {
                 statement = connection.createStatement();
 
                 // 회원 테이블
-                String createMemberTableSQL = "CREATE TABLE IF NOT EXISTS member(" +
+                String createMemberTableSQL = "CREATE TABLE IF NOT EXISTS member (" +
                         "id VARCHAR(255) PRIMARY KEY," +
                         "password VARCHAR(255)," +
                         "nickname VARCHAR(255)," +
                         "INDEX idx_nickname (nickname))";
-
 
                 // 게시판 테이블
                 String createTableSQL = "CREATE TABLE IF NOT EXISTS text_board (" +
@@ -41,13 +40,24 @@ public class CreateTable {
                         "FOREIGN KEY (board_number) REFERENCES text_board(number)," +
                         "FOREIGN KEY (comment_member_nickname) REFERENCES member(nickname))";
 
+                // 추천 테이블
+                String createSuggestionTableSQL = "CREATE TABLE IF NOT EXISTS text_board_suggestion (" +
+                        "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                        "board_number INT," +
+                        "suggestion_member_nickname VARCHAR(255), " +
+                        "check_suggestion BOOLEAN DEFAULT FALSE, " + // 초기값을 FALSE로 설정
+                        "FOREIGN KEY (suggestion_member_nickname) REFERENCES member(nickname)," +
+                        "FOREIGN KEY (board_number) REFERENCES text_board(number))";
 
                 statement.executeUpdate(createMemberTableSQL);
                 statement.executeUpdate(createTableSQL);
                 statement.executeUpdate(createCommentTableSQL);
+                statement.executeUpdate(createSuggestionTableSQL);
+
                 System.out.println("createTableSQL Table created successfully");
                 System.out.println("createCommentTableSQL Table created successfully");
                 System.out.println("createMemberTableSQL Table created successfully");
+                System.out.println("createSuggestionTableSQL Table created successfully");
 
                 statement.close();
                 connection.close();

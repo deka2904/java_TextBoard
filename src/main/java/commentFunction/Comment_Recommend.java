@@ -7,35 +7,43 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class Comment_Recommend {
-    public void commentrecommend(int num){
+    public void commentrecommend(int num, String nickname) {
         Connection connection = DatabaseConnection.getConnection();
-        if(connection != null){
+        if (connection != null) {
             try {
-                String text_board_suggestionCountSQL = "SELECT text_board_suggestion FROM text_board WHERE number = ?";
-                PreparedStatement text_board_suggestionCountStatement = connection.prepareStatement(text_board_suggestionCountSQL);
-                text_board_suggestionCountStatement.setInt(1, num);
+                String suggestion_member_nickname = nickname;
 
-                ResultSet resultSet = text_board_suggestionCountStatement.executeQuery();
-                PreparedStatement update_text_board_suggestion_CountStatement = null;
+                String checkSuggestionSQL = "SELECT * FROM text_board_suggestion WHERE board_number = ? AND suggestion_member_nickname = ?";
+                PreparedStatement checkSuggestionStatement = connection.prepareStatement(checkSuggestionSQL);
+                checkSuggestionStatement.setInt(1, num);
+                checkSuggestionStatement.setString(2, suggestion_member_nickname);
 
-                if(resultSet.next()){
-                    int text_board_suggestionCount = resultSet.getInt("text_board_suggestion");
+                ResultSet checkSuggestionResultSet = checkSuggestionStatement.executeQuery();
 
-                    text_board_suggestionCount++;
+                if (!checkSuggestionResultSet.next()) {
+                    String text_board_suggestionCountSQL = "INSERT INTO text_board_suggestion (board_number, suggestion_member_nickname, check_suggestion) VALUES (?, ?, ?)";
+                    PreparedStatement text_board_suggestionCountStatement = connection.prepareStatement(text_board_suggestionCountSQL);
+                    text_board_suggestionCountStatement.setInt(1, num);
+                    text_board_suggestionCountStatement.setString(2, suggestion_member_nickname);
+                    text_board_suggestionCountStatement.setBoolean(3, true);
 
-                    // 조회수 업데이트
-                    String updateViewCountQuery = "UPDATE text_board SET text_board_suggestion = ? WHERE number = ?";
-                    update_text_board_suggestion_CountStatement = connection.prepareStatement(updateViewCountQuery);
-                    update_text_board_suggestion_CountStatement.setInt(1, text_board_suggestionCount);
-                    update_text_board_suggestion_CountStatement.setInt(2, num);
-                    update_text_board_suggestion_CountStatement.executeUpdate();
+                    int insertedRowCount = text_board_suggestionCountStatement.executeUpdate();
 
-                    System.out.println("추천 등록이 완료되었습니다.");
-                }else{
-                    System.out.println("추천할 수 없습니다.");
+                    if (insertedRowCount > 0) {
+                        String updateSuggestionCountQuery = "UPDATE text_board SET text_board_suggestion = text_board_suggestion + 1 WHERE number = ?";
+                        PreparedStatement updateSuggestionCountStatement = connection.prepareStatement(updateSuggestionCountQuery);
+                        updateSuggestionCountStatement.setInt(1, num);
+                        updateSuggestionCountStatement.executeUpdate();
+
+                        System.out.println("추천 등록이 완료되었습니다.");
+                    } else {
+                        System.out.println("추천할 수 없습니다.");
+                    }
+                } else {
+                    System.out.println("이미 추천한 댓글입니다.");
                 }
-            }catch (Exception e){
-
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

@@ -2,42 +2,38 @@ package Function;
 
 import Main.Main_textboard;
 import SQL.DatabaseConnection;
-import commentFunction.CommentAdd;
+import commentFunction.Comment_Add;
+import commentFunction.Comment_Delete;
+import commentFunction.Comment_Recommend;
+import commentFunction.Comment_Update;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Scanner;
 
-public class Board_Action implements Action {
-    private Connection connection;
-    private final Scanner scanner;
-    private ResultSet resultSet;
-    private PreparedStatement preparedStatement;
+import static Main.Main_textboard.number;
 
-    public Board_Action() {
-        this.connection = DatabaseConnection.getConnection();
-        this.scanner = new Scanner(System.in);
-    }
+public class Board_Action implements Action {
+    Scanner scanner = new Scanner(System.in);
+
     @Override
-    public void add(){
-        int number = 1;
+    public void add(String nickname){
         System.out.print("게시물 제목을 입력해주세요 : ");
         String title = scanner.nextLine();
         System.out.print("게시물 내용을 입력해주세요 : ");
         String contents = scanner.nextLine();
         Article new_Board = new Article(number, title, contents);
         Main_textboard.boardList.add(new_Board);
-
+        String text_board_member_nickname = nickname;
         // JDBC 연결 설정
+        Connection connection = DatabaseConnection.getConnection();
         if (connection != null) {
             try {
                 // SQL 쿼리를 사용하여 데이터베이스에 게시물 추가
-                String insertQuery = "INSERT INTO text_board (title, contents, time) VALUES (?, ?, NOW())";
-                preparedStatement = connection.prepareStatement(insertQuery);
+                String insertQuery = "INSERT INTO text_board (title, contents, time, text_board_member_nickname) VALUES (?, ?, NOW(), ?)";
+                PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
                 preparedStatement.setString(1, title);
                 preparedStatement.setString(2, contents);
+                preparedStatement.setString(3, text_board_member_nickname);
 
                 number++;
 
@@ -48,10 +44,65 @@ public class Board_Action implements Action {
                     System.out.println("게시물 등록에 실패했습니다.");
                 }
                 preparedStatement.close();
-                resultSet.close();
-                connection.close();
             } catch (SQLException e) {
-                System.out.println("Error" + e);
+                System.out.println(e);
+            } finally {
+                try {
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (SQLException e) {
+
+                }
+            }
+        }
+    }
+    @Override
+    public void list(){
+        System.out.println("==================");
+
+        // JDBC 연결 설정
+        Connection connection = DatabaseConnection.getConnection();
+        if (connection != null) {
+            try {
+                // SQL 쿼리를 사용하여 데이터베이스에서 게시물 목록을 가져옴
+                String selectQuery = "SELECT * FROM text_board";
+                PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+                // 위 쿼리는 매개 변수가 없으므로 매개 변수 설정은 필요 없음
+
+                // 결과셋을 가져오기 위해 executeQuery를 사용
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                // 결과를 순회하면서 출력
+                while (resultSet.next()) {
+                    int number = resultSet.getInt("number");
+                    String title = resultSet.getString("title");
+                    String time = resultSet.getString("time");
+                    int viewCount = resultSet.getInt("view_count");
+                    String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
+                    int text_board_suggestion = resultSet.getInt("text_board_suggestion");
+
+                    // 가져온 결과를 출력
+                    System.out.println("[게시글 번호] : " + number);
+                    System.out.println("[작성자] : "+ text_board_member_nickname);
+                    System.out.println("[게시글 제목] : " + title);
+                    System.out.println("[시간] : " + time);
+                    System.out.println("[조회수] : " + viewCount);
+                    System.out.println("[추천수] : " + text_board_suggestion);
+                    System.out.println("==================");
+                }
+                preparedStatement.close();
+                resultSet.close();
+            }catch (SQLException e) {
+                // 발생할 수 있는 SQLException 처리
+            } finally {
+                try {
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (SQLException e) {
+                    // 닫을 때 발생할 수 있는 SQLException 처리
+                }
             }
         }
     }
@@ -63,6 +114,7 @@ public class Board_Action implements Action {
             int num = Integer.parseInt(scanner.nextLine());
 
             // JDBC 연결 설정
+            Connection connection = DatabaseConnection.getConnection();
             if (connection != null) {
                 try {
                     // SQL DELETE 쿼리 실행
@@ -76,27 +128,41 @@ public class Board_Action implements Action {
 
                         // 삭제 후에 데이터 다시 가져와 출력
                         String selectQuery = "SELECT * FROM text_board";
-                        preparedStatement = connection.prepareStatement(selectQuery);
-                        resultSet = preparedStatement.executeQuery();
+                        PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+                        ResultSet resultSet = preparedStatement.executeQuery();
 
                         // 결과를 순회하면서 출력
                         while (resultSet.next()) {
                             int number = resultSet.getInt("number");
                             String title = resultSet.getString("title");
+                            String time = resultSet.getString("time");
+                            int viewCount = resultSet.getInt("view_count");
+                            String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
+                            int text_board_suggestion = resultSet.getInt("text_board_suggestion");
 
-                            // 결과를 출력
-                            System.out.println("번호 : " + number);
-                            System.out.println("제목 : " + title);
+                            // 가져온 결과를 출력
+                            System.out.println("[게시글 번호] : " + number);
+                            System.out.println("[작성자] : "+ text_board_member_nickname);
+                            System.out.println("[게시글 제목] : " + title);
+                            System.out.println("[시간] : " + time);
+                            System.out.println("[조회수] : " + viewCount);
+                            System.out.println("[추천수] : " + text_board_suggestion);
                             System.out.println("==================");
                         }
                     } else {
                         System.out.println("게시물 삭제에 실패했습니다. 해당 번호를 찾을 수 없습니다.");
                     }
                     deleteStatement.close();
-                    resultSet.close();
-                    connection.close();
                 } catch (SQLException e) {
-                    System.out.println("Error" + e);
+                    // 발생할 수 있는 SQLException 처리
+                } finally {
+                    try {
+                        if (connection != null) {
+                            connection.close();
+                        }
+                    } catch (SQLException e) {
+                        // 닫을 때 발생할 수 있는 SQLException 처리
+                    }
                 }
             }
         } catch (NumberFormatException e) {
@@ -104,12 +170,45 @@ public class Board_Action implements Action {
         }
     }
     @Override
-    public void detail(){
-        Scanner scanner = new Scanner(System.in);
+    public void detail(String nickname){
+        System.out.println("==================");
+        // JDBC 연결 설정
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            // SQL 쿼리를 사용하여 데이터베이스에서 게시물 목록을 가져옴
+            String selectQuery = "SELECT * FROM text_board";
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            // 위 쿼리는 매개 변수가 없으므로 매개 변수 설정은 필요 없음
+
+            // 결과셋을 가져오기 위해 executeQuery를 사용
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // 결과를 순회하면서 출력
+            while (resultSet.next()) {
+                int number = resultSet.getInt("number");
+                String title = resultSet.getString("title");
+                String time = resultSet.getString("time");
+                int viewCount = resultSet.getInt("view_count");
+                String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
+                int text_board_suggestion = resultSet.getInt("text_board_suggestion");
+
+                // 가져온 결과를 출력
+                System.out.println("[게시글 번호] : " + number);
+                System.out.println("[작성자] : "+ text_board_member_nickname);
+                System.out.println("[게시글 제목] : " + title);
+                System.out.println("[시간] : " + time);
+                System.out.println("[조회수] : " + viewCount);
+                System.out.println("[추천수] : " + text_board_suggestion);
+                System.out.println("==================");
+            }
+            preparedStatement.close();
+            resultSet.close();
+        }catch (SQLException e) {
+
+        }
         System.out.print("상세보기 할 게시물 번호를 입력해주세요 : ");
         try {
             int num = Integer.parseInt(scanner.nextLine());
-            // JDBC 연결 설정
             if (connection != null) {
                 try {
                     // SQL SELECT 쿼리 실행
@@ -122,7 +221,7 @@ public class Board_Action implements Action {
                     selectContentsStatement.setInt(1, num);
 
                     // 결과셋을 가져오기 위해 executeQuery를 사용
-                    resultSet = selectContentsStatement.executeQuery();
+                    ResultSet resultSet = selectContentsStatement.executeQuery();
 
                     PreparedStatement updateViewCountStatement = null;
                     if (resultSet.next()) {
@@ -131,29 +230,45 @@ public class Board_Action implements Action {
                         String contents = resultSet.getString("contents");
                         String time = resultSet.getString("time");
                         int viewCount = resultSet.getInt("view_count");
-                        String comment = resultSet.getString("comment");
-                        String comment_time = resultSet.getString("comment_time");
+                        int text_board_suggestion = resultSet.getInt("text_board_suggestion");
 
                         // 조회수 1 증가
                         viewCount++;
 
                         // 가져온 결과를 출력
-                        System.out.println("게시글 번호: " + number);
-                        System.out.println("게시글 제목: " + title);
-                        System.out.println("게시글 내용: " + contents);
-                        System.out.println("시간: " + time);
-                        System.out.println("조회수: " + viewCount);
+                        System.out.println("[게시글 번호] : " + number);
+                        System.out.println("[게시글 제목] : " + title);
+                        System.out.println("[게시글 내용] : " + contents);
+                        System.out.println("[시간] : " + time);
+                        System.out.println("[조회수] : " + viewCount);
+                        System.out.println("[추천수] : " + text_board_suggestion);
                         System.out.println("==================");
                         System.out.println("======= 댓글 =======");
 
-                        // 댓글 출력을 위한 루프
-                        do {
-                            comment = resultSet.getString("comment");
-                            comment_time = resultSet.getString("comment_time");
+                        try {
+                            String nicknameSQL = "SELECT comment, comment_time, comment_member_nickname FROM text_board_comment WHERE board_number = ?";
+                            PreparedStatement nicknameStatement = connection.prepareStatement(nicknameSQL);
+                            nicknameStatement.setInt(1, num);
 
-                            System.out.println("댓글 내용: " + comment);
-                            System.out.println("댓글 작성일: " + comment_time);
-                        } while (resultSet.next());
+                            ResultSet nicknameResultSet = nicknameStatement.executeQuery();
+
+                            if (nicknameResultSet.next()) {
+                                // 댓글 출력을 위한 루프
+                                do {
+                                    String comment = nicknameResultSet.getString("comment");
+                                    String comment_time = nicknameResultSet.getString("comment_time");
+                                    String comment_member_nickname = nicknameResultSet.getString("comment_member_nickname");
+
+                                    System.out.println("[댓글 내용] : " + comment);
+                                    System.out.println("[작성자] : " + comment_member_nickname);
+                                    System.out.println("[댓글 작성일] : " + comment_time);
+                                } while (nicknameResultSet.next());
+                            } else {
+                                System.out.println("댓글이 없습니다.");
+                            }
+                        } catch (Exception e) {
+                            System.out.println(e);
+                        }
 
                         // 조회수 업데이트
                         String updateViewCountQuery = "UPDATE text_board SET view_count = ? WHERE number = ?";
@@ -172,17 +287,20 @@ public class Board_Action implements Action {
                                 int function = Integer.parseInt(scanner.nextLine());
                                 switch (function) {
                                     case 1:
-                                        CommentAdd commentAdd = new CommentAdd();
-                                        commentAdd.commentadd(num);
+                                        Comment_Add comment_add = new Comment_Add();
+                                        comment_add.commentadd(num, nickname);
                                         break;
                                     case 2:
-                                        System.out.println("[추천 기능]");
+                                        Comment_Recommend comment_recommend = new Comment_Recommend();
+                                        comment_recommend.commentrecommend(num);
                                         break;
                                     case 3:
-                                        System.out.println("[수정 기능]");
+                                        Comment_Update comment_update = new Comment_Update();
+                                        comment_update.commentupdate();
                                         break;
                                     case 4:
-                                        System.out.println("[삭제 기능]");
+                                        Comment_Delete comment_delete = new Comment_Delete();
+                                        comment_delete.commentdelete();
                                         break;
                                     case 5:
                                         break Outter;  // 외부로 빠져나감
@@ -206,49 +324,20 @@ public class Board_Action implements Action {
                     selectContentsStatement.close();
                     updateViewCountStatement.close();
                     resultSet.close();
-                    connection.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                }catch (SQLException e) {
+                    // 발생할 수 있는 SQLException 처리
+                } finally {
+                    try {
+                        if (connection != null) {
+                            connection.close();
+                        }
+                    } catch (SQLException e) {
+                        // 닫을 때 발생할 수 있는 SQLException 처리
+                    }
                 }
             }
         } catch (NumberFormatException e) {
             System.out.println("올바른 번호를 입력해 주세요.");
-        }
-    }
-    @Override
-    public void list(){
-        System.out.println("==================");
-
-        // JDBC 연결 설정
-        if (connection != null) {
-            try {
-                // SQL 쿼리를 사용하여 데이터베이스에서 게시물 목록을 가져옴
-                String selectQuery = "SELECT * FROM text_board";
-                preparedStatement = connection.prepareStatement(selectQuery);
-                // 위 쿼리는 매개 변수가 없으므로 매개 변수 설정은 필요 없음
-
-                // 결과셋을 가져오기 위해 executeQuery를 사용
-                resultSet = preparedStatement.executeQuery();
-
-                // 결과를 순회하면서 출력
-                while (resultSet.next()) {
-                    int number = resultSet.getInt("number");
-                    String title = resultSet.getString("title");
-                    String time = resultSet.getString("time");
-                    int viewCount = resultSet.getInt("view_count");
-                    // 가져온 결과를 출력
-                    System.out.println("게시글 번호: " + number);
-                    System.out.println("게시글 제목: " + title);
-                    System.out.println("시간: " + time);
-                    System.out.println("조회수: " + viewCount);
-                    System.out.println("==================");
-                }
-                preparedStatement.close();
-                resultSet.close();
-                connection.close();
-            } catch (SQLException e) {
-                System.out.println("Error" + e);
-            }
         }
     }
     @Override
@@ -257,6 +346,7 @@ public class Board_Action implements Action {
         String keyword = scanner.nextLine();
 
         // JDBC 연결 설정
+        Connection connection = DatabaseConnection.getConnection();
         if (connection != null) {
             try {
                 // SQL 쿼리를 사용하여 키워드 검색
@@ -264,25 +354,39 @@ public class Board_Action implements Action {
                 PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
                 selectStatement.setString(1, "%" + keyword + "%");
 
-                resultSet = selectStatement.executeQuery();
+                ResultSet resultSet = selectStatement.executeQuery();
                 // 결과를 순회하면서 출력
                 while (resultSet.next()) {
                     int number = resultSet.getInt("number");
                     String title = resultSet.getString("title");
                     String time = resultSet.getString("time");
+                    String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
+                    int viewCount = resultSet.getInt("view_count");
+                    int text_board_suggestion = resultSet.getInt("text_board_suggestion");
+
                     // 가져온 결과를 출력
-                    System.out.println("번호: " + number);
-                    System.out.println("제목: " + title);
-                    System.out.println("시간: " + time);
+                    System.out.println("[게시판 번호] : " + number);
+                    System.out.println("[작성자] : " + text_board_member_nickname);
+                    System.out.println("[게시판 제목] : " + title);
+                    System.out.println("[시간] : " + time);
+                    System.out.println("[조회수] : " + viewCount);
+                    System.out.println("[추천수] : " + text_board_suggestion);
                     System.out.println("==================");
                 }
 
                 // 자원 해제
                 selectStatement.close();
                 resultSet.close();
-                connection.close();
             } catch (SQLException e) {
-                System.out.println("Error" + e);
+                // 발생할 수 있는 SQLException 처리
+            } finally {
+                try {
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (SQLException e) {
+                    // 닫을 때 발생할 수 있는 SQLException 처리
+                }
             }
         }
     }
@@ -294,6 +398,7 @@ public class Board_Action implements Action {
             int num = Integer.parseInt(scanner.nextLine());
 
             // JDBC 연결 설정
+            Connection connection = DatabaseConnection.getConnection();
             if (connection != null) {
                 try {
                     // SQL 쿼리를 사용하여 게시물을 가져옴
@@ -301,7 +406,7 @@ public class Board_Action implements Action {
                     PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
                     selectStatement.setInt(1, num);
 
-                    resultSet = selectStatement.executeQuery();
+                    ResultSet resultSet = selectStatement.executeQuery();
 
                     if (resultSet.next()) {
                         System.out.print("새로운 게시물 제목을 입력해주세요 : ");
@@ -332,7 +437,15 @@ public class Board_Action implements Action {
                     selectStatement.close();
                     // Do not close the connection here.
                 } catch (SQLException e) {
-                    System.out.println("Error" + e);
+                    // 발생할 수 있는 SQLException 처리
+                } finally {
+                    try {
+                        if (connection != null) {
+                            connection.close();
+                        }
+                    } catch (SQLException e) {
+                        // 닫을 때 발생할 수 있는 SQLException 처리
+                    }
                 }
             }
         } catch (NumberFormatException e) {
@@ -345,13 +458,14 @@ public class Board_Action implements Action {
         System.out.print("아이디를 입력해주세요: ");
         String id = scanner.nextLine();
 
+        Connection connection = DatabaseConnection.getConnection();
         try {
             // 아이디 중복 체크
             String idCheckQuery = "SELECT id FROM member WHERE id = ?";
             idCheckStatement = connection.prepareStatement(idCheckQuery);
             idCheckStatement.setString(1, id);
 
-            resultSet = idCheckStatement.executeQuery();
+            ResultSet resultSet = idCheckStatement.executeQuery();
 
             if (resultSet.next()) {
                 // 아이디가 이미 존재하는 경우
@@ -370,7 +484,7 @@ public class Board_Action implements Action {
                     if (pw1.equals(pw2)){
                         // SQL 쿼리를 사용하여 데이터베이스에 회원 정보 추가
                         String insertQuery = "INSERT INTO member (id, password, nickname) VALUES (?, ?, ?)";
-                        preparedStatement = connection.prepareStatement(insertQuery);
+                        PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
                         preparedStatement.setString(1, id);
                         preparedStatement.setString(2, pw1);
                         preparedStatement.setString(3, nickname);
@@ -386,12 +500,17 @@ public class Board_Action implements Action {
                     }
                 }
             }
-            preparedStatement.close();
             idCheckStatement.close();
-            connection.close();
-            resultSet.close();
         } catch (SQLException e) {
-            System.out.println("Error" + e);
+            // 발생할 수 있는 SQLException 처리
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // 닫을 때 발생할 수 있는 SQLException 처리
+            }
         }
     }
     @Override
@@ -399,7 +518,8 @@ public class Board_Action implements Action {
         boolean logIn = false;
         String nickname = "";
 
-        // JDBC 연결 설정 (open the connection once)
+        // JDBC 연결 설정
+        Connection connection = DatabaseConnection.getConnection();
         try {
             connection = DatabaseConnection.getConnection();
         } catch (Exception e) {
@@ -419,7 +539,7 @@ public class Board_Action implements Action {
                 memberCheckStatement.setString(1, id);
                 memberCheckStatement.setString(2, pw);
 
-                resultSet = memberCheckStatement.executeQuery();
+                ResultSet resultSet = memberCheckStatement.executeQuery();
 
                 if (resultSet.next()) {
                     // 로그인 성공
@@ -430,9 +550,16 @@ public class Board_Action implements Action {
                     // 로그인 실패: 아이디 또는 패스워드가 일치하지 않음
                     System.out.println("존재하지 않은 회원입니다.\n다시 시도해주세요.");
                 }
-                connection.close();
             } catch (SQLException e) {
-                System.out.println("오류 발생: " + e.getMessage());
+                // 발생할 수 있는 SQLException 처리
+            } finally {
+                try {
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (SQLException e) {
+                    // 닫을 때 발생할 수 있는 SQLException 처리
+                }
             }
         } while (!logIn);
         return nickname;

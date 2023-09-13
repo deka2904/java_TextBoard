@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main_textboard {
+    public static int number = 1;
     public static final ArrayList<Article> boardList = new ArrayList<>();
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -42,7 +43,7 @@ public class Main_textboard {
                     
                     // 게시글 추가
                     if (func.equals("add")) {
-                        action.add();
+                        action.add(nickname);
                     }
                     // 게시글 전체 제목 조회
                     else if (func.equals("list")) {
@@ -58,7 +59,7 @@ public class Main_textboard {
                     }
                     // 게시글 제목으로 조회
                     else if (func.equals("detail")) {
-                        action.detail();
+                        action.detail(nickname);
                     }
                     // 게시글 키워드 검색 후 조회
                     else if (func.equals("search")) {

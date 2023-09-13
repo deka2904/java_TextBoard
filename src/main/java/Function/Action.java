@@ -1,11 +1,9 @@
 package Function;
 
-import java.sql.SQLException;
-
 public interface Action {
-    void add();
+    void add(String nickname);
     void delete();
-    void detail();
+    void detail(String nickname);
     void list();
     void search();
     void update();

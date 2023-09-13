@@ -26,20 +26,20 @@ public class CreateTable {
                         "title VARCHAR(255)," +
                         "contents TEXT," +
                         "view_count INT DEFAULT 0," +
+                        "text_board_suggestion INT DEFAULT 0," +
                         "time TIMESTAMP DEFAULT NOW()," +
-                        "member_nickname VARCHAR(255)," + // 외래 키로 사용할 회원의 닉네임
-                        "FOREIGN KEY (member_nickname) REFERENCES member(nickname))";
+                        "text_board_member_nickname VARCHAR(255)," + // 외래 키로 사용할 회원의 닉네임
+                        "FOREIGN KEY (text_board_member_nickname) REFERENCES member(nickname))";
 
                 // 댓글 테이블
                 String createCommentTableSQL = "CREATE TABLE IF NOT EXISTS text_board_comment (" +
                         "id INT AUTO_INCREMENT PRIMARY KEY," +
                         "comment TEXT," +
-                        "comment_suggestion INT DEFAULT 0," +
                         "comment_time TIMESTAMP DEFAULT NOW()," +
-                        "board_number INT," +           // 외래 키로 사용할 게시판 번호
-                        "member_nickname VARCHAR(255)," + // 외래 키로 사용할 회원의 닉네임
+                        "board_number INT," +                       // 외래 키로 사용할 게시판 번호
+                        "comment_member_nickname VARCHAR(255)," +   // 외래 키로 사용할 회원의 닉네임
                         "FOREIGN KEY (board_number) REFERENCES text_board(number)," +
-                        "FOREIGN KEY (member_nickname) REFERENCES member(nickname))";
+                        "FOREIGN KEY (comment_member_nickname) REFERENCES member(nickname))";
 
 
                 statement.executeUpdate(createMemberTableSQL);

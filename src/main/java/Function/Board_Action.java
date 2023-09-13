@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class Board_Action implements Action {
     private Connection connection;
-    private Scanner scanner;
+    private final Scanner scanner;
     private PreparedStatement idCheckStatement;
     private PreparedStatement preparedStatement;
 
@@ -50,7 +50,7 @@ public class Board_Action implements Action {
                 preparedStatement.close();
                 // Do not close the connection here.
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.out.println("Error" + e);
             }
         }
     }
@@ -93,7 +93,7 @@ public class Board_Action implements Action {
                     }
                     deleteStatement.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    System.out.println("Error" + e);
                 }
             }
         } catch (NumberFormatException e) {
@@ -191,7 +191,7 @@ public class Board_Action implements Action {
                                     try {
                                         connection.close(); // 루프가 종료될 때 연결 닫기
                                     } catch (SQLException e) {
-                                        e.printStackTrace();
+                                        System.out.println("Error" + e);
                                     }
                                 }
                             }
@@ -256,7 +256,7 @@ public class Board_Action implements Action {
                     }
                     // Do not close the connection here.
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    System.out.println("Error" + e);
                 }
             }
         }
@@ -343,7 +343,7 @@ public class Board_Action implements Action {
                     selectStatement.close();
                     // Do not close the connection here.
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    System.out.println("Error" + e);
                 }
             }
         } catch (NumberFormatException e) {
@@ -397,7 +397,7 @@ public class Board_Action implements Action {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error" + e);
         } finally {
             // 사용한 자원 해제
             try {
@@ -411,7 +411,7 @@ public class Board_Action implements Action {
                     connection.close();
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.out.println("Error" + e);
             }
         }
     }
@@ -459,11 +459,9 @@ public class Board_Action implements Action {
 
         // Close the connection after all login attempts
         try {
-            if (connection != null) {
-                connection.close();
-            }
+            connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error" + e);
         }
         return nickname;
     }

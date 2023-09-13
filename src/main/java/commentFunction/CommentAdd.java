@@ -17,9 +17,8 @@ public class CommentAdd {
             // 댓글 입력 받기
             System.out.print("댓글 내용을 입력하세요: ");
             String commentText = scanner.nextLine();
-
-            // SQL INSERT 쿼리 실행
-            String commentQuery = "INSERT INTO text_board_comment (comment, comment_time, board_number, member_id) VALUES (?, NOW(), ?, ?)";
+            
+            String commentQuery = "INSERT INTO text_board_comment (comment, comment_time, board_number) VALUES (?, NOW(), ?)";
             PreparedStatement commentStatement = connection.prepareStatement(commentQuery);
             commentStatement.setString(1, commentText);
             commentStatement.setInt(2, num); // 게시물 번호를 외래 키로 설정

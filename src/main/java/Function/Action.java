@@ -1,5 +1,7 @@
 package Function;
 
+import java.sql.SQLException;
+
 public interface Action {
     void add();
     void delete();

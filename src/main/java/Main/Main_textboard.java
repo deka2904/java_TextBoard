@@ -1,13 +1,12 @@
 package Main;
 
 import Function.*;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main_textboard {
     public static final ArrayList<Article> boardList = new ArrayList<>();
-    public static int number = 1;
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         // 인터페이스 action 호출

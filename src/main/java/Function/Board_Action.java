@@ -21,12 +21,13 @@ public class Board_Action implements Action {
         this.scanner = new Scanner(System.in);
     }
     @Override
-    public void add() {
+    public void add(){
+        int number = 1;
         System.out.print("게시물 제목을 입력해주세요 : ");
         String title = scanner.nextLine();
         System.out.print("게시물 내용을 입력해주세요 : ");
         String contents = scanner.nextLine();
-        Article new_Board = new Article(Main_textboard.number, title, contents);
+        Article new_Board = new Article(number, title, contents);
         Main_textboard.boardList.add(new_Board);
 
         // JDBC 연결 설정
@@ -38,7 +39,7 @@ public class Board_Action implements Action {
                 preparedStatement.setString(1, title);
                 preparedStatement.setString(2, contents);
 
-                Main_textboard.number++;
+                number++;
 
                 int rowsAffected = preparedStatement.executeUpdate();
                 if (rowsAffected > 0) {
@@ -46,9 +47,9 @@ public class Board_Action implements Action {
                 } else {
                     System.out.println("게시물 등록에 실패했습니다.");
                 }
-
                 preparedStatement.close();
-                // Do not close the connection here.
+                resultSet.close();
+                connection.close();
             } catch (SQLException e) {
                 System.out.println("Error" + e);
             }
@@ -92,6 +93,8 @@ public class Board_Action implements Action {
                         System.out.println("게시물 삭제에 실패했습니다. 해당 번호를 찾을 수 없습니다.");
                     }
                     deleteStatement.close();
+                    resultSet.close();
+                    connection.close();
                 } catch (SQLException e) {
                     System.out.println("Error" + e);
                 }
@@ -200,9 +203,9 @@ public class Board_Action implements Action {
                         System.out.println("해당 번호의 게시물을 찾을 수 없습니다.");
                     }
                     // 자원 해제
-                    resultSet.close();
                     selectContentsStatement.close();
                     updateViewCountStatement.close();
+                    resultSet.close();
                     connection.close();
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
@@ -240,22 +243,11 @@ public class Board_Action implements Action {
                     System.out.println("조회수: " + viewCount);
                     System.out.println("==================");
                 }
-
+                preparedStatement.close();
+                resultSet.close();
+                connection.close();
             } catch (SQLException e) {
                 System.out.println("Error" + e);
-            } finally {
-                try {
-                    // 자원 해제
-                    if (resultSet != null) {
-                        resultSet.close();
-                    }
-                    if (preparedStatement != null) {
-                        preparedStatement.close();
-                    }
-                    // Do not close the connection here.
-                } catch (SQLException e) {
-                    System.out.println("Error" + e);
-                }
             }
         }
     }
@@ -286,9 +278,9 @@ public class Board_Action implements Action {
                 }
 
                 // 자원 해제
-                resultSet.close();
                 selectStatement.close();
-                // Do not close the connection here.
+                resultSet.close();
+                connection.close();
             } catch (SQLException e) {
                 System.out.println("Error" + e);
             }
@@ -335,8 +327,8 @@ public class Board_Action implements Action {
                     } else {
                         System.out.println("없는 게시물 번호입니다.");
                     }
-
                     resultSet.close();
+                    connection.close();
                     selectStatement.close();
                     // Do not close the connection here.
                 } catch (SQLException e) {
@@ -394,23 +386,12 @@ public class Board_Action implements Action {
                     }
                 }
             }
+            preparedStatement.close();
+            idCheckStatement.close();
+            connection.close();
+            resultSet.close();
         } catch (SQLException e) {
             System.out.println("Error" + e);
-        } finally {
-            // 사용한 자원 해제
-            try {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
-                if (idCheckStatement != null) {
-                    idCheckStatement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Error" + e);
-            }
         }
     }
     @Override
@@ -449,17 +430,11 @@ public class Board_Action implements Action {
                     // 로그인 실패: 아이디 또는 패스워드가 일치하지 않음
                     System.out.println("존재하지 않은 회원입니다.\n다시 시도해주세요.");
                 }
+                connection.close();
             } catch (SQLException e) {
                 System.out.println("오류 발생: " + e.getMessage());
             }
         } while (!logIn);
-
-        // Close the connection after all login attempts
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            System.out.println("Error" + e);
-        }
         return nickname;
     }
     @Override

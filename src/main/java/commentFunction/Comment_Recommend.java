@@ -43,7 +43,7 @@ public class Comment_Recommend {
                     System.out.println("이미 추천한 댓글입니다.");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e);
             }
         }
     }

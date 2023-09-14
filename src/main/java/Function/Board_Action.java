@@ -11,8 +11,8 @@ import java.sql.*;
 import java.util.Scanner;
 
 import static Main.Main_textboard.number;
-
 public class Board_Action implements Action {
+    private static final int PAGE_SIZE = 3; // 페이지 상수
     Scanner scanner = new Scanner(System.in);
     @Override
     public void add(String nickname){
@@ -181,12 +181,10 @@ public class Board_Action implements Action {
         }
     }
     @Override
-    public void page(int pageNumber){
-        final int PAGE_SIZE = 3; // 페이지 상수
-
+    public void page(int pageNumber) {
         // JDBC 연결 설정
         Connection connection = DatabaseConnection.getConnection();
-        if(connection != null) {
+        if (connection != null) {
             try {
                 boolean exit = false;
                 while (!exit) {
@@ -194,13 +192,15 @@ public class Board_Action implements Action {
                     int offset = (pageNumber - 1) * PAGE_SIZE;
 
                     // SQL 쿼리를 작성합니다. 여기서는 MySQL을 가정합니다.
-                    String pageingsql = "SELECT * FROM text_board LIMIT ? OFFSET ?";
-                    PreparedStatement pageingStatement = connection.prepareStatement(pageingsql);
-                    pageingStatement.setInt(1, PAGE_SIZE);
-                    pageingStatement.setInt(2, offset);
+                    String pagingSql = "SELECT * FROM text_board LIMIT ? OFFSET ?";
+                    PreparedStatement pagingStatement = connection.prepareStatement(pagingSql);
+                    pagingStatement.setInt(1, PAGE_SIZE);
+                    pagingStatement.setInt(2, offset);
 
-                    ResultSet resultSet = pageingStatement.executeQuery();
                     // 결과를 순회하면서 출력 (페이징 처리)
+                    ResultSet resultSet = pagingStatement.executeQuery();
+                    boolean hasNextPage = false;
+
                     while (resultSet.next()) {
                         int number = resultSet.getInt("number");
                         String title = resultSet.getString("title");
@@ -217,35 +217,68 @@ public class Board_Action implements Action {
                         System.out.println("[조회수] : " + viewCount);
                         System.out.println("[추천수] : " + text_board_suggestion);
                         System.out.println("=============================================================================");
-                        System.out.println("[1] 2 3 4 5 >>");
-                        System.out.print("페이징 명령어를 입력해주세요 ([1. 이전], [2. 다음], [3. 선택], [4. 뒤로가기]) : ");
-                        int choice = Integer.parseInt(scanner.nextLine());
 
+                        hasNextPage = true;
+                    }
+                    resultSet.close(); // resultSet 닫기
+                    pagingStatement.close(); // pagingStatement 닫기
+
+                    if (!hasNextPage) {
+                        System.out.println("더 이상 페이지가 없습니다.");
+                        break; // 더 이상 페이지가 없으면 반복문 종료
+                    }
+                    if (pageNumber == 1){
+                        System.out.println("[1] 2 3 4 5 >>");
+                    }else if(pageNumber == 2){
+                        System.out.println("1 [2] 3 4 5 >>");
+                    }else if(pageNumber == 3){
+                        System.out.println("1 2 [3] 4 5 >>");
+                    }else if(pageNumber == 4){
+                        System.out.println("1 2 3 [4] 5 >>");
+                    }else{
+                        System.out.println("1 2 3 4 [5] >>");
+                    }
+                    boolean innerExit = false;
+                    while (!innerExit) {
+                        System.out.print("페이징 명령어를 입력해주세요 (1. 이전, 2. 다음, 3. 선택, 4. 뒤로가기) : ");
+                        int choice = Integer.parseInt(scanner.nextLine());
                         switch (choice) {
                             case 1:
                                 if (pageNumber > 1) {
                                     pageNumber--;
+                                    innerExit = true;
                                 } else {
                                     System.out.println("첫 번째 페이지입니다.");
                                 }
                                 break;
                             case 2:
                                 pageNumber++;
+                                innerExit = true; // 내부 루프 빠져나가도록 설정
                                 break;
                             case 3:
-
+                                System.out.print("이동할 페이지 번호를 입력하세요: ");
+                                int selectedPage = Integer.parseInt(scanner.nextLine());
+                                if (selectedPage >= 1) {
+                                    pageNumber = selectedPage;
+                                    innerExit = true; // 내부 루프 빠져나가도록 설정
+                                } else {
+                                    System.out.println("유효하지 않은 페이지 번호입니다.");
+                                }
                                 break;
                             case 4:
                                 exit = true;
+                                innerExit = true; // 내부 루프 빠져나가도록 설정
+                                System.out.println("페이지 검색 종료합니다.");
                                 break;
                             default:
                                 System.out.println("유효하지 않은 선택입니다.");
                         }
                     }
                 }
-            }
-            catch(SQLException e){
-                    System.out.println(e);
+                // 연결 닫기
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
     }

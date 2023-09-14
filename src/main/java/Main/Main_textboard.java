@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main_textboard {
+    public static final int pageNumber = 1; // 원하는 페이지 번호를 지정하세요
     public static int number = 1;
     public static final ArrayList<Article> boardList = new ArrayList<>();
     public static void main(String[] args) {
@@ -78,7 +79,6 @@ public class Main_textboard {
                     }
                     // 게시글 페이지 만들기
                     else if (func.equals("page")) {
-                        int pageNumber = 1; // 원하는 페이지 번호를 지정하세요
                         action.page(pageNumber);
                     }
                     // 종료

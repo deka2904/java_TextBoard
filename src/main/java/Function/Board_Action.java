@@ -8,6 +8,8 @@ import commentFunction.Comment_Recommend;
 import commentFunction.Comment_Update;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.Scanner;
 
 import static Main.Main_textboard.number;
@@ -79,7 +81,7 @@ public class Board_Action implements Action {
                     String time = resultSet.getString("time");
                     int viewCount = resultSet.getInt("view_count");
                     String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
-                    int text_board_suggestion = resultSet.getInt("text_board_suggestion");
+                    int text_board_suggestion =  resultSet.getInt("text_board_suggestion");
 
                     // 가져온 결과를 출력
                     System.out.println("[게시글 번호] : " + number);

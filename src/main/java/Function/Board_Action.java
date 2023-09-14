@@ -14,7 +14,6 @@ import static Main.Main_textboard.number;
 
 public class Board_Action implements Action {
     Scanner scanner = new Scanner(System.in);
-
     @Override
     public void add(String nickname){
         System.out.print("게시물 제목을 입력해주세요 : ");
@@ -182,8 +181,73 @@ public class Board_Action implements Action {
         }
     }
     @Override
-    public void page(){
+    public void page(int pageNumber){
+        final int PAGE_SIZE = 3; // 페이지 상수
 
+        // JDBC 연결 설정
+        Connection connection = DatabaseConnection.getConnection();
+        if(connection != null) {
+            try {
+                boolean exit = false;
+                while (!exit) {
+                    // 페이지 번호에 따라 오프셋 계산
+                    int offset = (pageNumber - 1) * PAGE_SIZE;
+
+                    // SQL 쿼리를 작성합니다. 여기서는 MySQL을 가정합니다.
+                    String pageingsql = "SELECT * FROM text_board LIMIT ? OFFSET ?";
+                    PreparedStatement pageingStatement = connection.prepareStatement(pageingsql);
+                    pageingStatement.setInt(1, PAGE_SIZE);
+                    pageingStatement.setInt(2, offset);
+
+                    ResultSet resultSet = pageingStatement.executeQuery();
+                    // 결과를 순회하면서 출력 (페이징 처리)
+                    while (resultSet.next()) {
+                        int number = resultSet.getInt("number");
+                        String title = resultSet.getString("title");
+                        String time = resultSet.getString("time");
+                        int viewCount = resultSet.getInt("view_count");
+                        String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
+                        int text_board_suggestion = resultSet.getInt("text_board_suggestion");
+
+                        // 가져온 결과를 출력
+                        System.out.println("[게시글 번호] : " + number);
+                        System.out.println("[게시글 제목] : " + title);
+                        System.out.println("[작성자] : " + text_board_member_nickname);
+                        System.out.println("[시간] : " + time);
+                        System.out.println("[조회수] : " + viewCount);
+                        System.out.println("[추천수] : " + text_board_suggestion);
+                        System.out.println("=============================================================================");
+                        System.out.println("[1] 2 3 4 5 >>");
+                        System.out.print("페이징 명령어를 입력해주세요 ([1. 이전], [2. 다음], [3. 선택], [4. 뒤로가기]) : ");
+                        int choice = Integer.parseInt(scanner.nextLine());
+
+                        switch (choice) {
+                            case 1:
+                                if (pageNumber > 1) {
+                                    pageNumber--;
+                                } else {
+                                    System.out.println("첫 번째 페이지입니다.");
+                                }
+                                break;
+                            case 2:
+                                pageNumber++;
+                                break;
+                            case 3:
+
+                                break;
+                            case 4:
+                                exit = true;
+                                break;
+                            default:
+                                System.out.println("유효하지 않은 선택입니다.");
+                        }
+                    }
+                }
+            }
+            catch(SQLException e){
+                    System.out.println(e);
+            }
+        }
     }
     @Override
     public void delete(){

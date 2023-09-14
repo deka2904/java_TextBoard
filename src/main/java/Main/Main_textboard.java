@@ -44,8 +44,10 @@ public class Main_textboard {
             if (nickname.equals(nickname)) {
                 while (true) {
                     // 로그인 성공
+                    System.out.println("=============================================================================");
                     System.out.print("명령어(" + nickname + "): ");
                     String func = scanner.nextLine();
+                    System.out.println("=============================================================================");
                     // 게시글 추가
                     if (func.equals("add")) {
                         action.add(nickname);
@@ -76,7 +78,8 @@ public class Main_textboard {
                     }
                     // 게시글 페이지 만들기
                     else if (func.equals("page")) {
-                        action.page();
+                        int pageNumber = 1; // 원하는 페이지 번호를 지정하세요
+                        action.page(pageNumber);
                     }
                     // 종료
                     else if (func.equals("logout")) {

@@ -300,7 +300,7 @@ public class Board_Action implements Action {
                                         break;
                                     case 4:
                                         Comment_Delete comment_delete = new Comment_Delete();
-                                        comment_delete.commentdelete();
+                                        comment_delete.commentdelete(num, nickname);
                                         break;
                                     case 5:
                                         break Outter;  // 외부로 빠져나감

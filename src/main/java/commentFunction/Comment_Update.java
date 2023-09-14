@@ -23,9 +23,6 @@ public class Comment_Update {
 
             ResultSet resultSet = id_comment_Select_Statement.executeQuery();
 
-            // 댓글의 번호
-//            int commentNumber = 1;
-
             if (resultSet.next()) {
                 do {
                     // 게시글 내용 출력
@@ -36,7 +33,6 @@ public class Comment_Update {
                     System.out.println("[댓글 번호] : " + id);
                     System.out.println("[댓글 내용] : " + comment);
 
-//                    commentNumber++; // 댓글 번호 증가
                 } while (resultSet.next());
 
                 try {

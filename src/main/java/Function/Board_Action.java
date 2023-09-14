@@ -113,24 +113,70 @@ public class Board_Action implements Action {
         Connection connection = DatabaseConnection.getConnection();
         if (connection != null) {
             try{
-                String SortSQL = "SELECT";
+                String column = "";
+                String sortOrder = "";
+                Scanner scanner = new Scanner(System.in);
+
                 System.out.print("정렬 대상을 선택해주세요. (1. 번호,  2. 조회수) : ");
                 int sort1_num = Integer.parseInt(scanner.nextLine());
                 if (sort1_num == 1){
-
-                }else if(sort1_num == 2){
-
+                    column = "number"; // 번호를 선택한 경우
+                } else if(sort1_num == 2){
+                    column = "view_count"; // 조회수를 선택한 경우
+                } else {
+                    System.out.println("올바른 선택이 아닙니다.");
+                    return;
                 }
+
                 System.out.print("정렬 방법을 선택해주세요. (1. 오름차순,  2. 내림차순) : ");
                 int sort2_num = Integer.parseInt(scanner.nextLine());
                 if (sort2_num == 1){
-
-                }else if(sort2_num == 2){
-
+                    sortOrder = "ASC"; // 오름차순을 선택한 경우
+                } else if(sort2_num == 2){
+                    sortOrder = "DESC"; // 내림차순을 선택한 경우
+                } else {
+                    System.out.println("올바른 선택이 아닙니다.");
+                    return;
                 }
 
-            }catch (Exception e){
-                System.out.println(e);
+                // SQL 쿼리 생성
+                String SortSQL = "SELECT * FROM text_board ORDER BY " + column + " " + sortOrder;
+
+                // 이제 SortSQL을 사용하여 데이터베이스에서 데이터를 검색하거나 처리할 수 있습니다.
+                PreparedStatement sortStatement = connection.prepareStatement(SortSQL);
+
+                ResultSet resultSet = sortStatement.executeQuery();
+
+                // 결과를 순회하면서 출력
+                while (resultSet.next()) {
+                    int number = resultSet.getInt("number");
+                    String title = resultSet.getString("title");
+                    String time = resultSet.getString("time");
+                    int viewCount = resultSet.getInt("view_count");
+                    String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
+                    int text_board_suggestion = resultSet.getInt("text_board_suggestion");
+
+                    // 가져온 결과를 출력
+                    System.out.println("[게시글 번호] : " + number);
+                    System.out.println("[작성자] : "+ text_board_member_nickname);
+                    System.out.println("[게시글 제목] : " + title);
+                    System.out.println("[시간] : " + time);
+                    System.out.println("[조회수] : " + viewCount);
+                    System.out.println("[추천수] : " + text_board_suggestion);
+                    System.out.println("==================");
+                }
+                sortStatement.close();
+                resultSet.close();
+            } catch (SQLException e) {
+                // 발생할 수 있는 SQLException 처리
+            } finally {
+                try {
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (SQLException e) {
+                    // 닫을 때 발생할 수 있는 SQLException 처리
+                }
             }
         }
     }

@@ -53,6 +53,8 @@ public class Comment_Delete {
                 }catch (Exception e){
                     System.out.println(e);
                 }
+            }else {
+                System.out.println("해당 닉네임의 댓글이 없습니다.");
             }
         }catch(Exception e){
             System.out.println("올바른 번호를 입력해 주세요.");

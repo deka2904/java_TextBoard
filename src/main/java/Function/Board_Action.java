@@ -109,12 +109,39 @@ public class Board_Action implements Action {
     @Override
     public void delete(){
         Scanner scanner = new Scanner(System.in);
+        // JDBC 연결 설정
+        Connection connection = DatabaseConnection.getConnection();
+        try{
+            String selectQuery = "SELECT * FROM text_board";
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // 결과를 순회하면서 출력
+            while (resultSet.next()) {
+                int number = resultSet.getInt("number");
+                String title = resultSet.getString("title");
+                String time = resultSet.getString("time");
+                int viewCount = resultSet.getInt("view_count");
+                String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
+                int text_board_suggestion = resultSet.getInt("text_board_suggestion");
+
+                // 가져온 결과를 출력
+                System.out.println("[게시글 번호] : " + number);
+                System.out.println("[작성자] : "+ text_board_member_nickname);
+                System.out.println("[게시글 제목] : " + title);
+                System.out.println("[시간] : " + time);
+                System.out.println("[조회수] : " + viewCount);
+                System.out.println("[추천수] : " + text_board_suggestion);
+                System.out.println("==================");
+            }
+        }catch (Exception e){
+            System.out.println(e);
+        }
         System.out.print("삭제할 게시물 번호 : ");
+        boolean foundResults = false; // 결과가 있으면 true로 설정
         try {
             int num = Integer.parseInt(scanner.nextLine());
 
-            // JDBC 연결 설정
-            Connection connection = DatabaseConnection.getConnection();
             if (connection != null) {
                 try {
                     // SQL DELETE 쿼리 실행
@@ -125,6 +152,7 @@ public class Board_Action implements Action {
                     int deletedRows = deleteStatement.executeUpdate();
                     if (deletedRows > 0) {
                         System.out.printf("%d번 게시물이 삭제되었습니다.\n", num);
+                        foundResults = true;
 
                         // 삭제 후에 데이터 다시 가져와 출력
                         String selectQuery = "SELECT * FROM text_board";
@@ -149,8 +177,9 @@ public class Board_Action implements Action {
                             System.out.println("[추천수] : " + text_board_suggestion);
                             System.out.println("==================");
                         }
-                    } else {
-                        System.out.println("게시물 삭제에 실패했습니다. 해당 번호를 찾을 수 없습니다.");
+                    }
+                    if(!foundResults){
+                        System.out.println("해당 번호를 찾을 수 없습니다.");
                     }
                     deleteStatement.close();
                 } catch (SQLException e) {
@@ -174,6 +203,7 @@ public class Board_Action implements Action {
         System.out.println("==================");
         // JDBC 연결 설정
         Connection connection = DatabaseConnection.getConnection();
+        PreparedStatement updateViewCountStatement = null;
         try {
             // SQL 쿼리를 사용하여 데이터베이스에서 게시물 목록을 가져옴
             String selectQuery = "SELECT * FROM text_board";
@@ -223,7 +253,6 @@ public class Board_Action implements Action {
                     // 결과셋을 가져오기 위해 executeQuery를 사용
                     ResultSet resultSet = selectContentsStatement.executeQuery();
 
-                    PreparedStatement updateViewCountStatement = null;
                     if (resultSet.next()) {
                         int number = resultSet.getInt("number");
                         String title = resultSet.getString("title");
@@ -322,7 +351,10 @@ public class Board_Action implements Action {
                     }
                     // 자원 해제
                     selectContentsStatement.close();
-                    updateViewCountStatement.close();
+                    // 자원 해제
+                    if (updateViewCountStatement != null) {
+                        updateViewCountStatement.close();
+                    }
                     resultSet.close();
                 }catch (SQLException e) {
                     System.out.println("해당 번호의 게시물을 찾을 수 없습니다.");
@@ -341,7 +373,7 @@ public class Board_Action implements Action {
         }
     }
     @Override
-    public void search(){
+    public void search() {
         System.out.print("검색 키워드를 입력해주세요: ");
         String keyword = scanner.nextLine();
 
@@ -355,8 +387,11 @@ public class Board_Action implements Action {
                 selectStatement.setString(1, "%" + keyword + "%");
 
                 ResultSet resultSet = selectStatement.executeQuery();
+                boolean foundResults = false; // 결과가 있으면 true로 설정
+
                 // 결과를 순회하면서 출력
                 while (resultSet.next()) {
+                    foundResults = true;
                     int number = resultSet.getInt("number");
                     String title = resultSet.getString("title");
                     String time = resultSet.getString("time");
@@ -372,6 +407,10 @@ public class Board_Action implements Action {
                     System.out.println("[조회수] : " + viewCount);
                     System.out.println("[추천수] : " + text_board_suggestion);
                     System.out.println("==================");
+                }
+
+                if (!foundResults) {
+                    System.out.println("찾을 수 없습니다.");
                 }
 
                 // 자원 해제
@@ -393,12 +432,40 @@ public class Board_Action implements Action {
     @Override
     public void update(){
         Scanner scanner = new Scanner(System.in);
+        // JDBC 연결 설정
+        Connection connection = DatabaseConnection.getConnection();
+        try{
+            String selectQuery = "SELECT * FROM text_board";
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // 결과를 순회하면서 출력
+            while (resultSet.next()) {
+                int number = resultSet.getInt("number");
+                String title = resultSet.getString("title");
+                String time = resultSet.getString("time");
+                int viewCount = resultSet.getInt("view_count");
+                String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
+                int text_board_suggestion = resultSet.getInt("text_board_suggestion");
+
+                // 가져온 결과를 출력
+                System.out.println("[게시글 번호] : " + number);
+                System.out.println("[작성자] : "+ text_board_member_nickname);
+                System.out.println("[게시글 제목] : " + title);
+                System.out.println("[시간] : " + time);
+                System.out.println("[조회수] : " + viewCount);
+                System.out.println("[추천수] : " + text_board_suggestion);
+                System.out.println("==================");
+            }
+        }catch (Exception e){
+            System.out.println(e);
+        }
         System.out.print("수정할 게시물 번호 : ");
+        boolean foundResults = false; // 결과가 있으면 true로 설정
+
         try {
             int num = Integer.parseInt(scanner.nextLine());
 
-            // JDBC 연결 설정
-            Connection connection = DatabaseConnection.getConnection();
             if (connection != null) {
                 try {
                     // SQL 쿼리를 사용하여 게시물을 가져옴
@@ -407,7 +474,6 @@ public class Board_Action implements Action {
                     selectStatement.setInt(1, num);
 
                     ResultSet resultSet = selectStatement.executeQuery();
-
                     if (resultSet.next()) {
                         System.out.print("새로운 게시물 제목을 입력해주세요 : ");
                         String newTitle = scanner.nextLine();
@@ -422,15 +488,16 @@ public class Board_Action implements Action {
                         updateStatement.setInt(3, num);
 
                         int updatedRows = updateStatement.executeUpdate();
+                        foundResults = true;
                         if (updatedRows > 0) {
                             System.out.printf("%d번 게시물이 수정되었습니다.\n", num);
                         } else {
                             System.out.println("게시물 수정에 실패했습니다.");
                         }
-
                         updateStatement.close();
-                    } else {
-                        System.out.println("없는 게시물 번호입니다.");
+                    }
+                    if(!foundResults){
+                        System.out.println("해당 번호를 찾을 수 없습니다.");
                     }
                     resultSet.close();
                     connection.close();
@@ -514,10 +581,8 @@ public class Board_Action implements Action {
         }
     }
     @Override
-    public String login(){
-        boolean logIn = false;
+    public String login() {
         String nickname = "";
-
         // JDBC 연결 설정
         Connection connection;
         try {
@@ -526,21 +591,19 @@ public class Board_Action implements Action {
             System.out.println("오류 발생: " + e.getMessage());
             return "";
         }
+        boolean logIn = false; // 로그인 성공 여부를 확인하는 변수
         do {
             System.out.print("아이디를 입력해주세요: ");
             String id = scanner.nextLine();
             System.out.print("패스워드를 입력해주세요: ");
             String pw = scanner.nextLine();
-
             try {
                 // 아이디와 패스워드로 회원 조회
                 String memberCheckQuery = "SELECT * FROM member WHERE id = ? AND password = ?";
                 PreparedStatement memberCheckStatement = connection.prepareStatement(memberCheckQuery);
                 memberCheckStatement.setString(1, id);
                 memberCheckStatement.setString(2, pw);
-
                 ResultSet resultSet = memberCheckStatement.executeQuery();
-
                 if (resultSet.next()) {
                     // 로그인 성공
                     nickname = resultSet.getString("nickname"); // 닉네임을 가져옴
@@ -550,18 +613,20 @@ public class Board_Action implements Action {
                     // 로그인 실패: 아이디 또는 패스워드가 일치하지 않음
                     System.out.println("존재하지 않은 회원입니다.\n다시 시도해주세요.");
                 }
+                // ResultSet을 닫음
+                resultSet.close();
             } catch (SQLException e) {
                 // 발생할 수 있는 SQLException 처리
-            } finally {
-                try {
-                    if (connection != null) {
-                        connection.close();
-                    }
-                } catch (SQLException e) {
-                    // 닫을 때 발생할 수 있는 SQLException 처리
-                }
             }
-        } while (!logIn);
+        } while (!logIn); // 로그인 성공할 때까지 반복
+        // 연결을 닫음
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            // 닫을 때 발생할 수 있는 SQLException 처리
+        }
         return nickname;
     }
     @Override

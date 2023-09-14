@@ -17,7 +17,13 @@ public class Main_textboard {
         while (true) {
             System.out.println("[1. 회원가입 2. 로그인 3. 종료]");
             System.out.print("해당 번호를 입력하세요: ");
-            int menuChoice = Integer.parseInt(scanner.nextLine());
+            int menuChoice;
+            try {
+                menuChoice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("올바른 번호를 입력하세요.");
+                continue;
+            }
 
             String nickname = "";
             switch (menuChoice) {

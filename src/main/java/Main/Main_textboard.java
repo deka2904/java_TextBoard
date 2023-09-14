@@ -38,7 +38,7 @@ public class Main_textboard {
                     return;
                 default:
                     System.out.println("올바른 메뉴를 선택하세요.");
-                    break;
+                    continue;
             }
 
             if (nickname.equals(nickname)) {
@@ -46,7 +46,6 @@ public class Main_textboard {
                     // 로그인 성공
                     System.out.print("명령어(" + nickname + "): ");
                     String func = scanner.nextLine();
-                    
                     // 게시글 추가
                     if (func.equals("add")) {
                         action.add(nickname);
@@ -54,6 +53,10 @@ public class Main_textboard {
                     // 게시글 전체 제목 조회
                     else if (func.equals("list")) {
                         action.list();
+                    }
+                    // 게시글 정렬 후 조회
+                    else if (func.equals("sort")) {
+                        action.sort();
                     }
                     // 게시글 업데이트
                     else if (func.equals("update")) {

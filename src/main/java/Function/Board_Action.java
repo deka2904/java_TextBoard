@@ -107,6 +107,34 @@ public class Board_Action implements Action {
         }
     }
     @Override
+    public void sort(){
+        // ASC - 오름차순 / DESC - 내림차순
+        // JDBC 연결 설정
+        Connection connection = DatabaseConnection.getConnection();
+        if (connection != null) {
+            try{
+                String SortSQL = "SELECT";
+                System.out.print("정렬 대상을 선택해주세요. (1. 번호,  2. 조회수) : ");
+                int sort1_num = Integer.parseInt(scanner.nextLine());
+                if (sort1_num == 1){
+
+                }else if(sort1_num == 2){
+
+                }
+                System.out.print("정렬 방법을 선택해주세요. (1. 오름차순,  2. 내림차순) : ");
+                int sort2_num = Integer.parseInt(scanner.nextLine());
+                if (sort2_num == 1){
+
+                }else if(sort2_num == 2){
+
+                }
+
+            }catch (Exception e){
+                System.out.println(e);
+            }
+        }
+    }
+    @Override
     public void delete(){
         Scanner scanner = new Scanner(System.in);
         // JDBC 연결 설정

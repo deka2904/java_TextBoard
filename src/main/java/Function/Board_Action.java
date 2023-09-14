@@ -296,7 +296,7 @@ public class Board_Action implements Action {
                                         break;
                                     case 3:
                                         Comment_Update comment_update = new Comment_Update();
-                                        comment_update.commentupdate();
+                                        comment_update.commentupdate(num, nickname);
                                         break;
                                     case 4:
                                         Comment_Delete comment_delete = new Comment_Delete();

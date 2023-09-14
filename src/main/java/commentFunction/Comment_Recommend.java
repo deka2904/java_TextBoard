@@ -40,7 +40,7 @@ public class Comment_Recommend {
                         System.out.println("추천할 수 없습니다.");
                     }
                 } else {
-                    System.out.println("이미 추천한 댓글입니다.");
+                    System.out.println("이미 추천한 게시글입니다.");
                 }
             } catch (Exception e) {
                 System.out.println(e);

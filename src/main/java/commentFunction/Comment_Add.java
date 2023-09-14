@@ -51,8 +51,8 @@ public class Comment_Add {
                 System.out.println("게시글 내용: " + contents);
                 System.out.println("시간: " + time);
                 System.out.println("조회수: " + viewCount);
-                System.out.println("==================");
-                System.out.println("======= 댓글 =======");
+                System.out.println("=============================================================================");
+                System.out.println("================================= 댓글 =======================================");
 
                 // 댓글 출력을 위한 루프
                 do {
@@ -63,6 +63,7 @@ public class Comment_Add {
                     System.out.println("[댓글 내용] : " + comment);
                     System.out.println("[작성자] : " + comment_member_nickname);
                     System.out.println("[댓글 작성일] : " + comment_time);
+                    System.out.println("=============================================================================");
                 } while (resultSet.next());
 
                 // 자원 해제

@@ -59,7 +59,7 @@ public class Board_Action implements Action {
     }
     @Override
     public void list(){
-        System.out.println("==================");
+        System.out.println("=============================================================================");
 
         // JDBC 연결 설정
         Connection connection = DatabaseConnection.getConnection();
@@ -84,12 +84,12 @@ public class Board_Action implements Action {
 
                     // 가져온 결과를 출력
                     System.out.println("[게시글 번호] : " + number);
-                    System.out.println("[작성자] : "+ text_board_member_nickname);
                     System.out.println("[게시글 제목] : " + title);
+                    System.out.println("[작성자] : "+ text_board_member_nickname);
                     System.out.println("[시간] : " + time);
                     System.out.println("[조회수] : " + viewCount);
                     System.out.println("[추천수] : " + text_board_suggestion);
-                    System.out.println("==================");
+                    System.out.println("=============================================================================");
                 }
                 preparedStatement.close();
                 resultSet.close();
@@ -116,7 +116,7 @@ public class Board_Action implements Action {
                 String column = "";
                 String sortOrder = "";
                 Scanner scanner = new Scanner(System.in);
-
+                System.out.println("=============================================================================");
                 System.out.print("정렬 대상을 선택해주세요. (1. 번호,  2. 조회수) : ");
                 int sort1_num = Integer.parseInt(scanner.nextLine());
                 if (sort1_num == 1){
@@ -127,9 +127,10 @@ public class Board_Action implements Action {
                     System.out.println("올바른 선택이 아닙니다.");
                     return;
                 }
-
+                System.out.println("=============================================================================");
                 System.out.print("정렬 방법을 선택해주세요. (1. 오름차순,  2. 내림차순) : ");
                 int sort2_num = Integer.parseInt(scanner.nextLine());
+                System.out.println("=============================================================================");
                 if (sort2_num == 1){
                     sortOrder = "ASC"; // 오름차순을 선택한 경우
                 } else if(sort2_num == 2){
@@ -158,12 +159,12 @@ public class Board_Action implements Action {
 
                     // 가져온 결과를 출력
                     System.out.println("[게시글 번호] : " + number);
-                    System.out.println("[작성자] : "+ text_board_member_nickname);
                     System.out.println("[게시글 제목] : " + title);
+                    System.out.println("[작성자] : "+ text_board_member_nickname);
                     System.out.println("[시간] : " + time);
                     System.out.println("[조회수] : " + viewCount);
                     System.out.println("[추천수] : " + text_board_suggestion);
-                    System.out.println("==================");
+                    System.out.println("=============================================================================");
                 }
                 sortStatement.close();
                 resultSet.close();
@@ -179,6 +180,10 @@ public class Board_Action implements Action {
                 }
             }
         }
+    }
+    @Override
+    public void page(){
+
     }
     @Override
     public void delete(){
@@ -201,12 +206,12 @@ public class Board_Action implements Action {
 
                 // 가져온 결과를 출력
                 System.out.println("[게시글 번호] : " + number);
-                System.out.println("[작성자] : "+ text_board_member_nickname);
                 System.out.println("[게시글 제목] : " + title);
+                System.out.println("[작성자] : "+ text_board_member_nickname);
                 System.out.println("[시간] : " + time);
                 System.out.println("[조회수] : " + viewCount);
                 System.out.println("[추천수] : " + text_board_suggestion);
-                System.out.println("==================");
+                System.out.println("=============================================================================");
             }
         }catch (Exception e){
             System.out.println(e);
@@ -244,12 +249,12 @@ public class Board_Action implements Action {
 
                             // 가져온 결과를 출력
                             System.out.println("[게시글 번호] : " + number);
-                            System.out.println("[작성자] : "+ text_board_member_nickname);
                             System.out.println("[게시글 제목] : " + title);
+                            System.out.println("[작성자] : "+ text_board_member_nickname);
                             System.out.println("[시간] : " + time);
                             System.out.println("[조회수] : " + viewCount);
                             System.out.println("[추천수] : " + text_board_suggestion);
-                            System.out.println("==================");
+                            System.out.println("=============================================================================");
                         }
                     }
                     if(!foundResults){
@@ -274,7 +279,7 @@ public class Board_Action implements Action {
     }
     @Override
     public void detail(String nickname){
-        System.out.println("==================");
+        System.out.println("=============================================================================");
         // JDBC 연결 설정
         Connection connection = DatabaseConnection.getConnection();
         PreparedStatement updateViewCountStatement = null;
@@ -298,12 +303,12 @@ public class Board_Action implements Action {
 
                 // 가져온 결과를 출력
                 System.out.println("[게시글 번호] : " + number);
-                System.out.println("[작성자] : "+ text_board_member_nickname);
                 System.out.println("[게시글 제목] : " + title);
+                System.out.println("[작성자] : "+ text_board_member_nickname);
                 System.out.println("[시간] : " + time);
                 System.out.println("[조회수] : " + viewCount);
                 System.out.println("[추천수] : " + text_board_suggestion);
-                System.out.println("==================");
+                System.out.println("=============================================================================");
             }
             preparedStatement.close();
             resultSet.close();
@@ -334,6 +339,7 @@ public class Board_Action implements Action {
                         String time = resultSet.getString("time");
                         int viewCount = resultSet.getInt("view_count");
                         int text_board_suggestion = resultSet.getInt("text_board_suggestion");
+                        String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
 
                         // 조회수 1 증가
                         viewCount++;
@@ -342,11 +348,12 @@ public class Board_Action implements Action {
                         System.out.println("[게시글 번호] : " + number);
                         System.out.println("[게시글 제목] : " + title);
                         System.out.println("[게시글 내용] : " + contents);
+                        System.out.println("[작성자] : "+ text_board_member_nickname);
                         System.out.println("[시간] : " + time);
                         System.out.println("[조회수] : " + viewCount);
                         System.out.println("[추천수] : " + text_board_suggestion);
-                        System.out.println("==================");
-                        System.out.println("======= 댓글 =======");
+                        System.out.println("=============================================================================");
+                        System.out.println("================================= 댓글 =======================================");
 
                         try {
                             String nicknameSQL = "SELECT comment, comment_time, comment_member_nickname FROM text_board_comment WHERE board_number = ?";
@@ -365,6 +372,7 @@ public class Board_Action implements Action {
                                     System.out.println("[댓글 내용] : " + comment);
                                     System.out.println("[작성자] : " + comment_member_nickname);
                                     System.out.println("[댓글 작성일] : " + comment_time);
+                                    System.out.println("=============================================================================");
                                 } while (nicknameResultSet.next());
                             } else {
                                 System.out.println("댓글이 없습니다.");
@@ -475,12 +483,12 @@ public class Board_Action implements Action {
 
                     // 가져온 결과를 출력
                     System.out.println("[게시판 번호] : " + number);
-                    System.out.println("[작성자] : " + text_board_member_nickname);
                     System.out.println("[게시판 제목] : " + title);
+                    System.out.println("[작성자] : " + text_board_member_nickname);
                     System.out.println("[시간] : " + time);
                     System.out.println("[조회수] : " + viewCount);
                     System.out.println("[추천수] : " + text_board_suggestion);
-                    System.out.println("==================");
+                    System.out.println("=============================================================================");
                 }
 
                 if (!foundResults) {

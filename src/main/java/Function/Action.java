@@ -7,6 +7,7 @@ public interface Action {
     void list();
     void search();
     void update();
+    void page();
     void sort();
     void sign_in();
     String login();

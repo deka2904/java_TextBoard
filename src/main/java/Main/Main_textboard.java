@@ -74,6 +74,10 @@ public class Main_textboard {
                     else if (func.equals("search")) {
                         action.search();
                     }
+                    // 게시글 페이지 만들기
+                    else if (func.equals("page")) {
+                        action.page();
+                    }
                     // 종료
                     else if (func.equals("logout")) {
                         action.logout();

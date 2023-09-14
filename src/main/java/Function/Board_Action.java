@@ -519,7 +519,7 @@ public class Board_Action implements Action {
         String nickname = "";
 
         // JDBC 연결 설정
-        Connection connection = DatabaseConnection.getConnection();
+        Connection connection;
         try {
             connection = DatabaseConnection.getConnection();
         } catch (Exception e) {

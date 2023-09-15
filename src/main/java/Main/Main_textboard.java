@@ -73,7 +73,9 @@ public class Main_textboard {
                     // 게시글 제목으로 조회
                     else if (func.equals("detail")) {
 //                        action.detail(nickname);
-                        boardController.detail();
+                        System.out.print("상세보기 할 게시물 번호를 입력해주세요 : ");
+                        int num = Integer.parseInt(scanner.nextLine());
+                        boardController.detail(num);
                     }
                     // 게시글 키워드 검색 후 조회
                     else if (func.equals("search")) {

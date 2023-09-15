@@ -146,55 +146,13 @@ public class Board_Action implements Action {
         }
         return article;
     }
-    public Article changelist(String sql, Article article) {
+    public Article changelist(String sql, Object[] obj) {
         Connection connection = DatabaseConnection.getConnection();
         boolean foundResults = false; // 결과가 있으면 true로 설정
         System.out.print("수정/삭제 할 게시물 번호 : ");
         int num = Integer.parseInt(scanner.nextLine());
         try {
-            if (sql.equals("DELETE")) {
-                // DELETE 작업을 수행
-                PreparedStatement deleteStatement = connection.prepareStatement(sql);
-                deleteStatement.setInt(1, num);
 
-                int deleteRows = deleteStatement.executeUpdate();
-
-                if (deleteRows > 0) {
-                    System.out.printf("%d번 게시물이 삭제되었습니다.\n", num);
-                    foundResults = true;
-                } else {
-                    System.out.println("게시물 삭제에 실패했습니다.");
-                }
-
-                deleteStatement.close();
-            } else if (sql.equals("UPDATE")) {
-                // UPDATE 작업을 수행
-                System.out.print("새로운 게시물 제목을 입력해주세요 : ");
-                String newTitle = scanner.nextLine();
-                System.out.print("새로운 게시물 내용을 입력해주세요 : ");
-                String newContents = scanner.nextLine();
-
-                PreparedStatement updateStatement = connection.prepareStatement(sql);
-                updateStatement.setString(1, newTitle);
-                updateStatement.setString(2, newContents);
-                updateStatement.setInt(3, num);
-
-                int updateRows = updateStatement.executeUpdate();
-
-                if (updateRows > 0) {
-                    System.out.printf("%d번 게시물이 수정되었습니다.\n", num);
-                    foundResults = true;
-                } else {
-                    System.out.println("게시물 수정에 실패했습니다.");
-                }
-
-                updateStatement.close();
-            }
-
-            if (!foundResults) {
-                System.out.println("해당 번호를 찾을 수 없습니다.");
-            }
-            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

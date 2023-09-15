@@ -45,6 +45,7 @@ public class QueryManager {
 
     public Article changeArticle(Article article) {
         String sql = "UPDATE text_board SET title = ?, contents = ?, time = NOW() WHERE number = ?";
+        Object[] obj = new Object[3];
         Article updatelistArticle = board_action.changelist(sql, article);
 
         return updatelistArticle;

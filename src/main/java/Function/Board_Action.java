@@ -90,7 +90,7 @@ public class Board_Action implements Action {
                     resultHashMap.put("시간", time);
                     resultHashMap.put("조회수", viewCount);
                     resultHashMap.put("추천수", text_board_suggestion);
-//asdfasdfasdfasdf
+
                     Print print = new Print();
                     print.print(resultHashMap);
                 }

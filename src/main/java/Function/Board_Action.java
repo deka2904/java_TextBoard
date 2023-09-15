@@ -14,6 +14,7 @@ import java.util.Scanner;
 
 import static Main.Main_textboard.number;
 public class Board_Action implements Action {
+    HashMap<String, Object> resultHashMap = new HashMap<>();
     private static final int PAGE_SIZE = 3; // 페이지 상수
     Scanner scanner = new Scanner(System.in);
     @Override
@@ -76,21 +77,22 @@ public class Board_Action implements Action {
 
                 // 결과를 순회하면서 출력
                 while (resultSet.next()) {
-                    int number = resultSet.getInt("number");
-                    String title = resultSet.getString("title");
-                    String time = resultSet.getString("time");
-                    int viewCount = resultSet.getInt("view_count");
-                    String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
-                    int text_board_suggestion =  resultSet.getInt("text_board_suggestion");
+                    Object number = resultSet.getObject("number");
+                    Object title = resultSet.getObject("title");
+                    Object time =resultSet.getObject("time");
+                    Object viewCount = resultSet.getObject("view_count");
+                    Object text_board_member_nickname = resultSet.getObject("text_board_member_nickname");
+                    Object text_board_suggestion = resultSet.getObject("text_board_suggestion");
 
-                    // 가져온 결과를 출력
-                    System.out.println("[게시글 번호] : " + number);
-                    System.out.println("[게시글 제목] : " + title);
-                    System.out.println("[작성자] : "+ text_board_member_nickname);
-                    System.out.println("[시간] : " + time);
-                    System.out.println("[조회수] : " + viewCount);
-                    System.out.println("[추천수] : " + text_board_suggestion);
-                    System.out.println("=============================================================================");
+                    resultHashMap.put("게시글 번호", number);
+                    resultHashMap.put("게시글 제목", title);
+                    resultHashMap.put("작성자", text_board_member_nickname);
+                    resultHashMap.put("시간", time);
+                    resultHashMap.put("조회수", viewCount);
+                    resultHashMap.put("추천수", text_board_suggestion);
+
+                    Print print = new Print();
+                    print.print(resultHashMap);
                 }
                 preparedStatement.close();
                 resultSet.close();

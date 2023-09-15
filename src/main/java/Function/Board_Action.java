@@ -7,6 +7,8 @@ import commentFunction.Comment_Recommend;
 import commentFunction.Comment_Update;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Board_Action implements Action {
@@ -47,15 +49,17 @@ public class Board_Action implements Action {
         }
         return article;
     }
-    public Article getAllArticles(){
+    public List<Article> getAllArticles() {
+        ArrayList<Article> articles = new ArrayList<>();
         Connection connection = DatabaseConnection.getConnection();
         if (connection != null) {
-            try{
+            try {
                 // SQL 쿼리를 사용하여 데이터베이스에서 게시물 목록을 가져옴
                 String selectQuery = "SELECT * FROM text_board";
                 PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
                 ResultSet resultSet = preparedStatement.executeQuery();
-                if (resultSet.next()) {
+                while (resultSet.next()) {
+                    Article article = new Article();
                     article.setNumber(resultSet.getInt("number"));
                     article.setTitle(resultSet.getString("title"));
                     article.setContents(resultSet.getString("contents"));
@@ -63,13 +67,81 @@ public class Board_Action implements Action {
                     article.setTime(resultSet.getString("time"));
                     article.setView_count(resultSet.getInt("view_count"));
                     article.setText_board_suggestion(resultSet.getInt("text_board_suggestion"));
+
+                    articles.add(article);
                 }
                 resultSet.close();
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e);
+            } finally {
+                try {
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (SQLException e) {
+                    // 닫을 때 발생할 수 있는 SQLException 처리
+                }
             }
         }
-        return article;
+        return articles;
+    }
+    public List<Article> getSearchedArticles(String keyword){
+        ArrayList<Article> articles = new ArrayList<>();
+        Connection connection = DatabaseConnection.getConnection();
+        if (connection != null) {
+            try {
+                // SQL 쿼리를 사용하여 키워드 검색
+                String selectQuery = "SELECT * FROM text_board WHERE title LIKE ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+                preparedStatement.setString(1, "%" + keyword + "%");
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+                boolean foundResults = false; // 결과가 있으면 true로 설정
+                // 결과를 순회하면서 출력
+                while (resultSet.next()) {
+                    foundResults = true;
+                    Article article = new Article();
+                    article.setNumber(resultSet.getInt("number"));
+                    article.setTitle(resultSet.getString("title"));
+                    article.setContents(resultSet.getString("contents"));
+                    article.setText_board_member_nickname(resultSet.getString("text_board_member_nickname"));
+                    article.setTime(resultSet.getString("time"));
+                    article.setView_count(resultSet.getInt("view_count"));
+                    article.setText_board_suggestion(resultSet.getInt("text_board_suggestion"));
+
+                    articles.add(article);
+                }
+
+                if (!foundResults) {
+                    System.out.println("찾을 수 없습니다.");
+                }
+                // 자원 해제
+                preparedStatement.close();
+                resultSet.close();
+            } catch (SQLException e) {
+                // 발생할 수 있는 SQLException 처리
+            } finally {
+                try {
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (SQLException e) {
+                    // 닫을 때 발생할 수 있는 SQLException 처리
+                }
+            }
+        }
+        return articles;
+    }
+    public boolean updateArticle(){
+        Connection connection = DatabaseConnection.getConnection();
+        if (connection != null) {
+            try {
+
+            } catch (Exception e) {
+
+            }
+        }
+        return b;
     }
     @Override
     public void add(String nickname){

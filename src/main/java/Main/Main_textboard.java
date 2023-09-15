@@ -54,7 +54,8 @@ public class Main_textboard {
                     }
                     // 게시글 전체 제목 조회
                     else if (func.equals("list")) {
-                        action.list();
+//                        action.list();
+                        boardController.list();
                     }
                     // 게시글 정렬 후 조회
                     else if (func.equals("sort")) {
@@ -75,7 +76,10 @@ public class Main_textboard {
                     }
                     // 게시글 키워드 검색 후 조회
                     else if (func.equals("search")) {
-                        action.search();
+//                        action.search();
+                        System.out.print("검색 키워드를 입력해주세요: ");
+                        String keyword = scanner.nextLine();
+                        boardController.search(keyword);
                     }
                     // 게시글 페이지 만들기
                     else if (func.equals("page")) {

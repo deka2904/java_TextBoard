@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 public class Board_Action implements Action {
     Article article = new Article();
-    private static int number = 1;
+    int number = 1;
     private static final int PAGE_SIZE = 3; // 페이지 상수
     Scanner scanner = new Scanner(System.in);
     @Override
@@ -132,24 +132,8 @@ public class Board_Action implements Action {
 
                 ResultSet resultSet = sortStatement.executeQuery();
 
-                // 결과를 순회하면서 출력
-                while (resultSet.next()) {
-                    int number = resultSet.getInt("number");
-                    String title = resultSet.getString("title");
-                    String time = resultSet.getString("time");
-                    int viewCount = resultSet.getInt("view_count");
-                    String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
-                    int text_board_suggestion = resultSet.getInt("text_board_suggestion");
-
-                    // 가져온 결과를 출력
-                    System.out.println("[게시글 번호] : " + number);
-                    System.out.println("[게시글 제목] : " + title);
-                    System.out.println("[작성자] : "+ text_board_member_nickname);
-                    System.out.println("[시간] : " + time);
-                    System.out.println("[조회수] : " + viewCount);
-                    System.out.println("[추천수] : " + text_board_suggestion);
-                    System.out.println("=============================================================================");
-                }
+                article.board_list(resultSet);
+                System.out.println("=============================================================================");
                 sortStatement.close();
                 resultSet.close();
             } catch (SQLException e) {
@@ -186,25 +170,8 @@ public class Board_Action implements Action {
                     ResultSet resultSet = pagingStatement.executeQuery();
                     boolean hasNextPage = false;
 
-                    while (resultSet.next()) {
-                        int number = resultSet.getInt("number");
-                        String title = resultSet.getString("title");
-                        String time = resultSet.getString("time");
-                        int viewCount = resultSet.getInt("view_count");
-                        String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
-                        int text_board_suggestion = resultSet.getInt("text_board_suggestion");
-
-                        // 가져온 결과를 출력
-                        System.out.println("[게시글 번호] : " + number);
-                        System.out.println("[게시글 제목] : " + title);
-                        System.out.println("[작성자] : " + text_board_member_nickname);
-                        System.out.println("[시간] : " + time);
-                        System.out.println("[조회수] : " + viewCount);
-                        System.out.println("[추천수] : " + text_board_suggestion);
-                        System.out.println("=============================================================================");
-
-                        hasNextPage = true;
-                    }
+                    article.board_list(resultSet);
+                    hasNextPage = true;
                     resultSet.close(); // resultSet 닫기
                     pagingStatement.close(); // pagingStatement 닫기
 
@@ -276,25 +243,7 @@ public class Board_Action implements Action {
             String selectQuery = "SELECT * FROM text_board";
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
-
-            // 결과를 순회하면서 출력
-            while (resultSet.next()) {
-                int number = resultSet.getInt("number");
-                String title = resultSet.getString("title");
-                String time = resultSet.getString("time");
-                int viewCount = resultSet.getInt("view_count");
-                String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
-                int text_board_suggestion = resultSet.getInt("text_board_suggestion");
-
-                // 가져온 결과를 출력
-                System.out.println("[게시글 번호] : " + number);
-                System.out.println("[게시글 제목] : " + title);
-                System.out.println("[작성자] : "+ text_board_member_nickname);
-                System.out.println("[시간] : " + time);
-                System.out.println("[조회수] : " + viewCount);
-                System.out.println("[추천수] : " + text_board_suggestion);
-                System.out.println("=============================================================================");
-            }
+            article.board_list(resultSet);
         }catch (Exception e){
             System.out.println(e);
         }
@@ -319,25 +268,7 @@ public class Board_Action implements Action {
                         String selectQuery = "SELECT * FROM text_board";
                         PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
                         ResultSet resultSet = preparedStatement.executeQuery();
-
-                        // 결과를 순회하면서 출력
-                        while (resultSet.next()) {
-                            int number = resultSet.getInt("number");
-                            String title = resultSet.getString("title");
-                            String time = resultSet.getString("time");
-                            int viewCount = resultSet.getInt("view_count");
-                            String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
-                            int text_board_suggestion = resultSet.getInt("text_board_suggestion");
-
-                            // 가져온 결과를 출력
-                            System.out.println("[게시글 번호] : " + number);
-                            System.out.println("[게시글 제목] : " + title);
-                            System.out.println("[작성자] : "+ text_board_member_nickname);
-                            System.out.println("[시간] : " + time);
-                            System.out.println("[조회수] : " + viewCount);
-                            System.out.println("[추천수] : " + text_board_suggestion);
-                            System.out.println("=============================================================================");
-                        }
+                        article.board_list(resultSet);
                     }
                     if(!foundResults){
                         System.out.println("해당 번호를 찾을 수 없습니다.");
@@ -373,25 +304,7 @@ public class Board_Action implements Action {
 
             // 결과셋을 가져오기 위해 executeQuery를 사용
             ResultSet resultSet = preparedStatement.executeQuery();
-
-            // 결과를 순회하면서 출력
-            while (resultSet.next()) {
-                int number = resultSet.getInt("number");
-                String title = resultSet.getString("title");
-                String time = resultSet.getString("time");
-                int viewCount = resultSet.getInt("view_count");
-                String text_board_member_nickname = resultSet.getString("text_board_member_nickname");
-                int text_board_suggestion = resultSet.getInt("text_board_suggestion");
-
-                // 가져온 결과를 출력
-                System.out.println("[게시글 번호] : " + number);
-                System.out.println("[게시글 제목] : " + title);
-                System.out.println("[작성자] : "+ text_board_member_nickname);
-                System.out.println("[시간] : " + time);
-                System.out.println("[조회수] : " + viewCount);
-                System.out.println("[추천수] : " + text_board_suggestion);
-                System.out.println("=============================================================================");
-            }
+            article.board_list(resultSet);
             preparedStatement.close();
             resultSet.close();
         }catch (SQLException e) {

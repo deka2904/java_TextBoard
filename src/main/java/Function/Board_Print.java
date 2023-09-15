@@ -2,7 +2,7 @@ package Function;
 
 import java.util.HashMap;
 
-public class Print {
+public class Board_Print {
     public void print(HashMap<String, Object> resultHashMap){
         int number = Integer.parseInt(String.valueOf(resultHashMap.get("게시글 번호")));
         String title = String.valueOf(resultHashMap.get("게시글 제목"));

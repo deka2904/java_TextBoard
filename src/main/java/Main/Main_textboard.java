@@ -7,12 +7,11 @@ import java.util.Scanner;
 
 public class Main_textboard {
     public static final int pageNumber = 1; // 원하는 페이지 번호를 지정하세요
-    public static int number = 1;
-    public static final ArrayList<Article> boardList = new ArrayList<>();
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         // 인터페이스 action 호출
         Action action = new Board_Action();
+        BoardController boardController = new BoardController();
 
         System.out.println("[[----------게시판----------]]");
         while (true) {
@@ -71,7 +70,8 @@ public class Main_textboard {
                     }
                     // 게시글 제목으로 조회
                     else if (func.equals("detail")) {
-                        action.detail(nickname);
+//                        action.detail(nickname);
+                        boardController.detail();
                     }
                     // 게시글 키워드 검색 후 조회
                     else if (func.equals("search")) {

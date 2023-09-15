@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Article {
+    // 객체 만들고
     public void board_list(ResultSet resultSet){
         try {
             while (resultSet.next()) {

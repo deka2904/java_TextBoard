@@ -64,7 +64,7 @@ public class Main_textboard {
                     // 게시글 업데이트
                     else if (func.equals("update")) {
 //                        action.update();
-                        boardController.update(article);
+//                        boardController.update(article);
                     }
                     // 게시글 삭제
                     else if (func.equals("delete")) {

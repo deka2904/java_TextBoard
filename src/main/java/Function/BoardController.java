@@ -30,8 +30,8 @@ public class BoardController {
         return searchedArticleList;
     }
 
-    public void update(Article article) {
-        boolean resultCode = queryManager.updateArticle(article);
-        System.out.println(resultCode); // true, false
-    }
+//    public void update(Article article) {
+//        boolean resultCode = queryManager.updateArticle(article);
+//        System.out.println(resultCode); // true, false
+//    }
 }

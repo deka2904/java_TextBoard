@@ -17,45 +17,6 @@ public class Board_Action implements Action {
     private static final int PAGE_SIZE = 3; // 페이지 상수
     Scanner scanner = new Scanner(System.in);
 
-    public Article getArticleById(int num) {
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection != null) {
-            try {
-                String selectContentsQuery = "SELECT * FROM text_board WHERE number = ?";
-                PreparedStatement preparedStatement = connection.prepareStatement(selectContentsQuery);
-                preparedStatement.setInt(1, num);
-
-                ResultSet resultSet = preparedStatement.executeQuery();
-                if (resultSet.next()) {
-                    article.setNumber(resultSet.getInt("number"));
-                    article.setTitle(resultSet.getString("title"));
-                    article.setContents(resultSet.getString("contents"));
-                    article.setText_board_member_nickname(resultSet.getString("text_board_member_nickname"));
-                    article.setTime(resultSet.getString("time"));
-                    article.setView_count(resultSet.getInt("view_count"));
-                    article.setText_board_suggestion(resultSet.getInt("text_board_suggestion"));
-                }
-                resultSet.close();
-            } catch (Exception e) {
-                System.out.println(e);
-            } finally {
-                try {
-                    if (connection != null) {
-                        connection.close();
-                    }
-                } catch (SQLException e) {
-                    // 닫을 때 발생할 수 있는 SQLException 처리
-                }
-            }
-        }
-        return article;
-    }
-//    public List<Article> getAllArticles() {
-//        return  getAllArticle();
-//    }
-//    public List<Article> getSearchedArticles(String keyword) {
-//        return  queryManager.getArticle(keyword);
-//    }
     public boolean updateArticle(Article article) {
         boolean foundResults = false; // 결과가 있으면 true로 설정
         Connection connection = DatabaseConnection.getConnection();
@@ -118,6 +79,8 @@ public class Board_Action implements Action {
         }
         return foundResults;
     }
+    
+    // list / search
     public List<Article> selectList(String sql) {
         ArrayList<Article> articles = new ArrayList<>();
         Connection connection = DatabaseConnection.getConnection();
@@ -159,10 +122,38 @@ public class Board_Action implements Action {
         }
         return articles;
     }
+    // detail
+    public Article selectOne(String sql) {
+        Connection connection = DatabaseConnection.getConnection();
+        if (connection != null) {
+            try {
 
-//    public Article selectOne(String sql) {
-//
-//    }
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    article.setNumber(resultSet.getInt("number"));
+                    article.setTitle(resultSet.getString("title"));
+                    article.setContents(resultSet.getString("contents"));
+                    article.setText_board_member_nickname(resultSet.getString("text_board_member_nickname"));
+                    article.setTime(resultSet.getString("time"));
+                    article.setView_count(resultSet.getInt("view_count"));
+                    article.setText_board_suggestion(resultSet.getInt("text_board_suggestion"));
+                }
+                resultSet.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            } finally {
+                try {
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (SQLException e) {
+                    // 닫을 때 발생할 수 있는 SQLException 처리
+                }
+            }
+        }
+        return article;
+    }
 
     @Override
     public void add(String nickname){

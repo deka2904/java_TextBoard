@@ -1,14 +1,23 @@
 package Function;
 
+import java.util.List;
+
 public class BoardController {
 
     Board_Action board_action;
     Board_Print board_print;
 
-    public Article detail() {
+    public BoardController(){
+        board_action = new Board_Action();
+        board_print = new Board_Print();
+    }
 
-        Article article = board_action.getArticleById(1);
-        board_print(article); // 게시물 출력
-
+    public void detail() {
+        Article article = board_action.getArticleById(5);
+        board_print.board_print(article);
+    }
+    public void list() {
+        List<Article> articleList = (List<Article>) board_action.getAllArticles();
+        board_print.board_print((Article) articleList);
     }
 }

@@ -1,6 +1,5 @@
 package Function;
 
-import Main.Main_textboard;
 import SQL.DatabaseConnection;
 import commentFunction.Comment_Add;
 import commentFunction.Comment_Delete;
@@ -8,8 +7,6 @@ import commentFunction.Comment_Recommend;
 import commentFunction.Comment_Update;
 
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Board_Action implements Action {
@@ -17,6 +14,63 @@ public class Board_Action implements Action {
     int number = 1;
     private static final int PAGE_SIZE = 3; // 페이지 상수
     Scanner scanner = new Scanner(System.in);
+    public Article getArticleById(int num) {
+        Connection connection = DatabaseConnection.getConnection();
+        if (connection != null) {
+            try {
+                String selectContentsQuery = "SELECT * FROM text_board WHERE number = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(selectContentsQuery);
+                preparedStatement.setInt(1, num);
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    article.setNumber(resultSet.getInt("number"));
+                    article.setTitle(resultSet.getString("title"));
+                    article.setContents(resultSet.getString("contents"));
+                    article.setText_board_member_nickname(resultSet.getString("text_board_member_nickname"));
+                    article.setTime(resultSet.getString("time"));
+                    article.setView_count(resultSet.getInt("view_count"));
+                    article.setText_board_suggestion(resultSet.getInt("text_board_suggestion"));
+                }
+                resultSet.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            } finally {
+                try {
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (SQLException e) {
+                    // 닫을 때 발생할 수 있는 SQLException 처리
+                }
+            }
+        }
+        return article;
+    }
+    public Article getAllArticles(){
+        Connection connection = DatabaseConnection.getConnection();
+        if (connection != null) {
+            try{
+                // SQL 쿼리를 사용하여 데이터베이스에서 게시물 목록을 가져옴
+                String selectQuery = "SELECT * FROM text_board";
+                PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    article.setNumber(resultSet.getInt("number"));
+                    article.setTitle(resultSet.getString("title"));
+                    article.setContents(resultSet.getString("contents"));
+                    article.setText_board_member_nickname(resultSet.getString("text_board_member_nickname"));
+                    article.setTime(resultSet.getString("time"));
+                    article.setView_count(resultSet.getInt("view_count"));
+                    article.setText_board_suggestion(resultSet.getInt("text_board_suggestion"));
+                }
+                resultSet.close();
+            }catch (Exception e){
+                System.out.println(e);
+            }
+        }
+        return article;
+    }
     @Override
     public void add(String nickname){
         System.out.print("게시물 제목을 입력해주세요 : ");
@@ -73,7 +127,7 @@ public class Board_Action implements Action {
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 // 결과를 순회하면서 출력
-                article.board_list(resultSet);
+//                article.board_list(resultSet);
 
                 preparedStatement.close();
                 resultSet.close();
@@ -132,7 +186,7 @@ public class Board_Action implements Action {
 
                 ResultSet resultSet = sortStatement.executeQuery();
 
-                article.board_list(resultSet);
+//                article.board_list(resultSet);
                 System.out.println("=============================================================================");
                 sortStatement.close();
                 resultSet.close();
@@ -170,7 +224,7 @@ public class Board_Action implements Action {
                     ResultSet resultSet = pagingStatement.executeQuery();
                     boolean hasNextPage = false;
 
-                    article.board_list(resultSet);
+//                    article.board_list(resultSet);
                     hasNextPage = true;
                     resultSet.close(); // resultSet 닫기
                     pagingStatement.close(); // pagingStatement 닫기
@@ -243,7 +297,7 @@ public class Board_Action implements Action {
             String selectQuery = "SELECT * FROM text_board";
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
-            article.board_list(resultSet);
+//            article.board_list(resultSet);
         }catch (Exception e){
             System.out.println(e);
         }
@@ -268,7 +322,7 @@ public class Board_Action implements Action {
                         String selectQuery = "SELECT * FROM text_board";
                         PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
                         ResultSet resultSet = preparedStatement.executeQuery();
-                        article.board_list(resultSet);
+//                        article.board_list(resultSet);
                     }
                     if(!foundResults){
                         System.out.println("해당 번호를 찾을 수 없습니다.");
@@ -304,7 +358,7 @@ public class Board_Action implements Action {
 
             // 결과셋을 가져오기 위해 executeQuery를 사용
             ResultSet resultSet = preparedStatement.executeQuery();
-            article.board_list(resultSet);
+//            article.board_list(resultSet);
             preparedStatement.close();
             resultSet.close();
         }catch (SQLException e) {

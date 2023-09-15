@@ -16,6 +16,7 @@ public class Board_Action implements Action {
     int number = 1;
     private static final int PAGE_SIZE = 3; // 페이지 상수
     Scanner scanner = new Scanner(System.in);
+
     public Article getArticleById(int num) {
         Connection connection = DatabaseConnection.getConnection();
         if (connection != null) {
@@ -85,7 +86,7 @@ public class Board_Action implements Action {
         }
         return articles;
     }
-    public List<Article> getSearchedArticles(String keyword){
+    public List<Article> getSearchedArticles(String keyword) {
         ArrayList<Article> articles = new ArrayList<>();
         Connection connection = DatabaseConnection.getConnection();
         if (connection != null) {
@@ -132,17 +133,77 @@ public class Board_Action implements Action {
         }
         return articles;
     }
-    public boolean updateArticle(){
+    public boolean updateArticle(Article article) {
+        boolean foundResults = false; // 결과가 있으면 true로 설정
         Connection connection = DatabaseConnection.getConnection();
         if (connection != null) {
             try {
+                getAllArticles();   // 수정할 게시글 리스트 출력
+                
+                System.out.print("수정할 게시물 번호 : ");
+                int num = Integer.parseInt(scanner.nextLine());
+                try {
+                    // SQL 쿼리를 사용하여 게시물을 가져옴
+                    String selectQuery = "SELECT * FROM text_board WHERE number = ?";
+                    PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
+                    selectStatement.setInt(1, num);
 
-            } catch (Exception e) {
+                    ResultSet resultSet = selectStatement.executeQuery();
+                    if (resultSet.next()) {
+                        System.out.print("새로운 게시물 제목을 입력해주세요 : ");
+                        String newTitle = scanner.nextLine();
+                        System.out.print("새로운 게시물 내용을 입력해주세요 : ");
+                        String newContents = scanner.nextLine();
 
+                        // SQL UPDATE 쿼리 실행
+                        String updateQuery = "UPDATE text_board SET title = ?, contents = ?, time = NOW() WHERE number = ?";
+                        PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                        updateStatement.setString(1, article.setTitle(newTitle));
+                        updateStatement.setString(2, article.setTitle(newContents));
+                        updateStatement.setInt(3, num);
+
+                        int updatedRows = updateStatement.executeUpdate();
+                        foundResults = true;
+                        if (updatedRows > 0) {
+                            System.out.printf("%d번 게시물이 수정되었습니다.\n", num);
+                        } else {
+                            System.out.println("게시물 수정에 실패했습니다.");
+                        }
+                        updateStatement.close();
+                    }
+                    if (!foundResults) {
+                        System.out.println("해당 번호를 찾을 수 없습니다.");
+                    }
+                    resultSet.close();
+                    connection.close();
+                    selectStatement.close();
+                    // Do not close the connection here.
+                } catch (SQLException e) {
+                    // 발생할 수 있는 SQLException 처리
+                } finally {
+                    try {
+                        if (connection != null) {
+                            connection.close();
+                        }
+                    } catch (SQLException e) {
+                        // 닫을 때 발생할 수 있는 SQLException 처리
+                    }
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("올바른 번호를 입력해 주세요.");
             }
         }
-        return b;
+        return foundResults;
     }
+    public void selectList(){
+
+    }
+
+
+
+
+
+
     @Override
     public void add(String nickname){
         System.out.print("게시물 제목을 입력해주세요 : ");

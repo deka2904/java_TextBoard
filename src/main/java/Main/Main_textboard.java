@@ -2,7 +2,6 @@ package Main;
 
 import Function.*;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main_textboard {
@@ -11,6 +10,7 @@ public class Main_textboard {
         Scanner scanner = new Scanner(System.in);
         // 인터페이스 action 호출
         Action action = new Board_Action();
+        Article article = new Article();
         BoardController boardController = new BoardController();
 
         System.out.println("[[----------게시판----------]]");
@@ -63,7 +63,8 @@ public class Main_textboard {
                     }
                     // 게시글 업데이트
                     else if (func.equals("update")) {
-                        action.update();
+//                        action.update();
+                        boardController.update(article);
                     }
                     // 게시글 삭제
                     else if (func.equals("delete")) {

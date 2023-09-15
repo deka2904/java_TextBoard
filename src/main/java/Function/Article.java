@@ -5,7 +5,9 @@ import java.sql.ResultSet;
 public class Article {
    int number;
    String title;
+   String newTitle;
    String contents;
+   String newContents;
    String text_board_member_nickname;
    String time;
    int view_count;
@@ -24,7 +26,6 @@ public class Article {
       this.view_count = view_count;
       this.text_board_suggestion = text_board_suggestion;
    }
-
 
    // 게시글 번호
    public int getNumber() {

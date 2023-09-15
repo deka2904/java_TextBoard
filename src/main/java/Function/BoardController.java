@@ -1,6 +1,7 @@
 package Function;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BoardController {
 
@@ -30,8 +31,13 @@ public class BoardController {
         return searchedArticleList;
     }
 
-//    public void update(Article article) {
-//        boolean resultCode = queryManager.updateArticle(article);
-//        System.out.println(resultCode); // true, false
-//    }
+    public Article update(Article article) {
+        Article updateArticle = queryManager.changeArticle(article);
+        return updateArticle;
+    }
+
+    public Article delete(Article article){
+        Article deleteArticle = queryManager.changeArticle(article);
+        return deleteArticle;
+    }
 }

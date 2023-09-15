@@ -16,70 +16,6 @@ public class Board_Action implements Action {
     int number = 1;
     private static final int PAGE_SIZE = 3; // 페이지 상수
     Scanner scanner = new Scanner(System.in);
-
-    public boolean updateArticle(Article article) {
-        boolean foundResults = false; // 결과가 있으면 true로 설정
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection != null) {
-            try {
-//                getAllArticles();   // 수정할 게시글 리스트 출력
-
-                System.out.print("수정할 게시물 번호 : ");
-                int num = Integer.parseInt(scanner.nextLine());
-                try {
-                    // SQL 쿼리를 사용하여 게시물을 가져옴
-                    String selectQuery = "SELECT * FROM text_board WHERE number = ?";
-                    PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
-                    selectStatement.setInt(1, num);
-
-                    ResultSet resultSet = selectStatement.executeQuery();
-                    if (resultSet.next()) {
-                        System.out.print("새로운 게시물 제목을 입력해주세요 : ");
-                        String newTitle = scanner.nextLine();
-                        System.out.print("새로운 게시물 내용을 입력해주세요 : ");
-                        String newContents = scanner.nextLine();
-
-                        // SQL UPDATE 쿼리 실행
-                        String updateQuery = "UPDATE text_board SET title = ?, contents = ?, time = NOW() WHERE number = ?";
-                        PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
-                        updateStatement.setString(1, article.setTitle(newTitle));
-                        updateStatement.setString(2, article.setTitle(newContents));
-                        updateStatement.setInt(3, num);
-
-                        int updatedRows = updateStatement.executeUpdate();
-                        foundResults = true;
-                        if (updatedRows > 0) {
-                            System.out.printf("%d번 게시물이 수정되었습니다.\n", num);
-                        } else {
-                            System.out.println("게시물 수정에 실패했습니다.");
-                        }
-                        updateStatement.close();
-                    }
-                    if (!foundResults) {
-                        System.out.println("해당 번호를 찾을 수 없습니다.");
-                    }
-                    resultSet.close();
-                    connection.close();
-                    selectStatement.close();
-                    // Do not close the connection here.
-                } catch (SQLException e) {
-                    // 발생할 수 있는 SQLException 처리
-                } finally {
-                    try {
-                        if (connection != null) {
-                            connection.close();
-                        }
-                    } catch (SQLException e) {
-                        // 닫을 때 발생할 수 있는 SQLException 처리
-                    }
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("올바른 번호를 입력해 주세요.");
-            }
-        }
-        return foundResults;
-    }
-    
     // list / search
     public List<Article> selectList(String sql) {
         ArrayList<Article> articles = new ArrayList<>();
@@ -108,9 +44,8 @@ public class Board_Action implements Action {
             // 자원 해제
             preparedStatement.close();
             resultSet.close();
-        }
-       catch (SQLException e) {
-        // 발생할 수 있는 SQLException 처리
+        } catch (SQLException e) {
+            // 발생할 수 있는 SQLException 처리
         } finally {
             try {
                 if (connection != null) {
@@ -123,38 +58,149 @@ public class Board_Action implements Action {
         return articles;
     }
     // detail
-    public Article selectOne(String sql) {
+    public Article selectOne(String sql, int num) {
         Connection connection = DatabaseConnection.getConnection();
-        if (connection != null) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, num);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                article.setNumber(resultSet.getInt("number"));
+                article.setTitle(resultSet.getString("title"));
+                article.setContents(resultSet.getString("contents"));
+                article.setText_board_member_nickname(resultSet.getString("text_board_member_nickname"));
+                article.setTime(resultSet.getString("time"));
+                article.setView_count(resultSet.getInt("view_count"));
+                article.setText_board_suggestion(resultSet.getInt("text_board_suggestion"));
+            }
+            resultSet.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
             try {
-
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                if (resultSet.next()) {
-                    article.setNumber(resultSet.getInt("number"));
-                    article.setTitle(resultSet.getString("title"));
-                    article.setContents(resultSet.getString("contents"));
-                    article.setText_board_member_nickname(resultSet.getString("text_board_member_nickname"));
-                    article.setTime(resultSet.getString("time"));
-                    article.setView_count(resultSet.getInt("view_count"));
-                    article.setText_board_suggestion(resultSet.getInt("text_board_suggestion"));
+                if (connection != null) {
+                    connection.close();
                 }
-                resultSet.close();
-            } catch (Exception e) {
-                System.out.println(e);
-            } finally {
-                try {
-                    if (connection != null) {
-                        connection.close();
-                    }
-                } catch (SQLException e) {
-                    // 닫을 때 발생할 수 있는 SQLException 처리
-                }
+            } catch (SQLException e) {
+                // 닫을 때 발생할 수 있는 SQLException 처리
             }
         }
         return article;
     }
+    // update
+    public Article updatelist(String sql, Article article) {
+        Connection connection = DatabaseConnection.getConnection();
+        boolean foundResults = false; // 결과가 있으면 true로 설정
+        System.out.print("수정할 게시물 번호 : ");
+        int num = Integer.parseInt(scanner.nextLine());
+        try {
+            System.out.print("새로운 게시물 제목을 입력해주세요 : ");
+            article.title = scanner.nextLine();
+            System.out.print("새로운 게시물 내용을 입력해주세요 : ");
+            article.contents = scanner.nextLine();
 
+            PreparedStatement updateStatement = connection.prepareStatement(sql);
+            updateStatement.setString(1, article.title);
+            updateStatement.setString(2, article.contents);
+            updateStatement.setInt(3, num);
+            int updatedRows = updateStatement.executeUpdate();
+            foundResults = true;
+
+            if (updatedRows > 0) {
+                System.out.printf("%d번 게시물이 수정되었습니다.\n", num);
+            } else {
+                System.out.println("게시물 수정에 실패했습니다.");
+            }
+            updateStatement.close();
+
+            if (!foundResults) {
+                System.out.println("해당 번호를 찾을 수 없습니다.");
+            }
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return article;
+    }
+    // delete
+    public Article deletelist(String sql) {
+        Connection connection = DatabaseConnection.getConnection();
+        boolean foundResults = false; // 결과가 있으면 true로 설정
+        System.out.print("삭제할 게시물 번호 : ");
+        int num = Integer.parseInt(scanner.nextLine());
+        try {
+            // SQL DELETE 쿼리 실행
+            PreparedStatement deleteStatement = connection.prepareStatement(sql);
+            deleteStatement.setInt(1,  num);
+            int deletedRows = deleteStatement.executeUpdate();
+            if (deletedRows > 0) {
+                System.out.printf("%d번 게시물이 삭제되었습니다.\n", num);
+                foundResults = true;
+            }
+            if (!foundResults) {
+                System.out.println("해당 번호를 찾을 수 없습니다.");
+            }
+            deleteStatement.close();
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("올바른 번호를 입력해 주세요.");
+        }
+        return article;
+    }
+    public Article changelist(String sql, Article article) {
+        Connection connection = DatabaseConnection.getConnection();
+        boolean foundResults = false; // 결과가 있으면 true로 설정
+        System.out.print("수정/삭제 할 게시물 번호 : ");
+        int num = Integer.parseInt(scanner.nextLine());
+        try {
+            if (sql.equals("DELETE")) {
+                // DELETE 작업을 수행
+                PreparedStatement deleteStatement = connection.prepareStatement(sql);
+                deleteStatement.setInt(1, num);
+
+                int deleteRows = deleteStatement.executeUpdate();
+
+                if (deleteRows > 0) {
+                    System.out.printf("%d번 게시물이 삭제되었습니다.\n", num);
+                    foundResults = true;
+                } else {
+                    System.out.println("게시물 삭제에 실패했습니다.");
+                }
+
+                deleteStatement.close();
+            } else if (sql.equals("UPDATE")) {
+                // UPDATE 작업을 수행
+                System.out.print("새로운 게시물 제목을 입력해주세요 : ");
+                String newTitle = scanner.nextLine();
+                System.out.print("새로운 게시물 내용을 입력해주세요 : ");
+                String newContents = scanner.nextLine();
+
+                PreparedStatement updateStatement = connection.prepareStatement(sql);
+                updateStatement.setString(1, newTitle);
+                updateStatement.setString(2, newContents);
+                updateStatement.setInt(3, num);
+
+                int updateRows = updateStatement.executeUpdate();
+
+                if (updateRows > 0) {
+                    System.out.printf("%d번 게시물이 수정되었습니다.\n", num);
+                    foundResults = true;
+                } else {
+                    System.out.println("게시물 수정에 실패했습니다.");
+                }
+
+                updateStatement.close();
+            }
+
+            if (!foundResults) {
+                System.out.println("해당 번호를 찾을 수 없습니다.");
+            }
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return article;
+    }
     @Override
     public void add(String nickname){
         System.out.print("게시물 제목을 입력해주세요 : ");

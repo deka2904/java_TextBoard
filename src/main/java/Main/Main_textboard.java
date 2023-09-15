@@ -63,14 +63,16 @@ public class Main_textboard {
                     }
                     // 게시글 업데이트
                     else if (func.equals("update")) {
-//                        action.update();
-//                        boardController.update(article);
+                        boardController.list();
+                        boardController.update(article);
                     }
                     // 게시글 삭제
                     else if (func.equals("delete")) {
-                        action.delete();
+                        boardController.list();
+                        boardController.delete(article);
+                        boardController.list();
                     }
-                    // 게시글 제목으로 조회
+                    // 게시글을 상세히 조회
                     else if (func.equals("detail")) {
 //                        action.detail(nickname);
                         System.out.print("상세보기 할 게시물 번호를 입력해주세요 : ");

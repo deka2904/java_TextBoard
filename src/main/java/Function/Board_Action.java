@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
 
-import static Main.Main_textboard.number;
 public class Board_Action implements Action {
-    HashMap<String, Object> resultHashMap = new HashMap<>();
+    Article article = new Article();
+    private static int number = 1;
     private static final int PAGE_SIZE = 3; // 페이지 상수
     Scanner scanner = new Scanner(System.in);
     @Override
@@ -23,8 +23,6 @@ public class Board_Action implements Action {
         String title = scanner.nextLine();
         System.out.print("게시물 내용을 입력해주세요 : ");
         String contents = scanner.nextLine();
-        Article new_Board = new Article(number, title, contents);
-        Main_textboard.boardList.add(new_Board);
         String text_board_member_nickname = nickname;
         // JDBC 연결 설정
         Connection connection = DatabaseConnection.getConnection();
@@ -70,30 +68,13 @@ public class Board_Action implements Action {
                 // SQL 쿼리를 사용하여 데이터베이스에서 게시물 목록을 가져옴
                 String selectQuery = "SELECT * FROM text_board";
                 PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
-                // 위 쿼리는 매개 변수가 없으므로 매개 변수 설정은 필요 없음
 
                 // 결과셋을 가져오기 위해 executeQuery를 사용
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 // 결과를 순회하면서 출력
-                while (resultSet.next()) {
-                    Object number = resultSet.getObject("number");
-                    Object title = resultSet.getObject("title");
-                    Object time =resultSet.getObject("time");
-                    Object viewCount = resultSet.getObject("view_count");
-                    Object text_board_member_nickname = resultSet.getObject("text_board_member_nickname");
-                    Object text_board_suggestion = resultSet.getObject("text_board_suggestion");
+                article.board_list(resultSet);
 
-                    resultHashMap.put("게시글 번호", number);
-                    resultHashMap.put("게시글 제목", title);
-                    resultHashMap.put("작성자", text_board_member_nickname);
-                    resultHashMap.put("시간", time);
-                    resultHashMap.put("조회수", viewCount);
-                    resultHashMap.put("추천수", text_board_suggestion);
-
-                    Print print = new Print();
-                    print.print(resultHashMap);
-                }
                 preparedStatement.close();
                 resultSet.close();
             }catch (SQLException e) {

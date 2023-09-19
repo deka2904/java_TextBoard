@@ -91,26 +91,15 @@ public class Board_Action implements Action {
         int num = Integer.parseInt(scanner.nextLine());
 
         try {
+            System.out.print("새로운 게시물 제목을 입력해주세요 : ");
+            article[1] = scanner.nextLine();
+            System.out.print("새로운 게시물 내용을 입력해주세요 : ");
+            article[2] = scanner.nextLine();
+
             PreparedStatement statement = connection.prepareStatement(sql);
-
-            if (article.length >= 2) {
-                String newTitle = article[0];
-                String newContents = article[1];
-
-                statement.setString(1, newTitle);
-                statement.setString(2, newContents);
-                statement.setInt(3, num);
-            } else {
-                // 입력받은 제목과 내용이 없을 경우
-                System.out.print("새로운 게시물 제목을 입력해주세요 : ");
-                String newTitle = scanner.nextLine();
-                System.out.print("새로운 게시물 내용을 입력해주세요 : ");
-                String newContents = scanner.nextLine();
-
-                statement.setString(1, newTitle);
-                statement.setString(2, newContents);
-                statement.setInt(3, num);
-            }
+            statement.setString(1, article[1]);
+            statement.setString(2, article[2]);
+            statement.setInt(3, num);
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows > 0) {

@@ -30,15 +30,19 @@ public class BoardController {
         board_print.board_print(searchedArticleList);
         return searchedArticleList;
     }
-    public Article updateOrDelete(Article article, boolean isUpdate) {
-        Article updatedOrDeletedArticle;
 
-        if (isUpdate) {
-            updatedOrDeletedArticle = queryManager.updateArticle(article, true);
-        } else {
-            updatedOrDeletedArticle = queryManager.deleteArticle(article, false);
-        }
+    public Article update(Article article) {
+        Article updatedArticle;
+        updatedArticle = queryManager.updateArticle(article.getNumber(), article.getTitle(), article.getContents());
 
-        return updatedOrDeletedArticle;
+
+        return updatedArticle;
+    }
+
+    public Article delete(Article article) {
+        Article deletedArticle;
+        deletedArticle = queryManager.deleteArticle(article.getNumber());
+
+        return deletedArticle;
     }
 }

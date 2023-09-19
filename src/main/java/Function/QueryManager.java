@@ -30,16 +30,19 @@ public class QueryManager {
     }
 
     // 수정
-    public Article updateArticle(Article article, boolean isUpdate) {
+//    public Article updateArticle(String[] article, boolean isUpdate) {
+    public Article updateArticle(int number, String title, String content) {
         String sql = "UPDATE text_board SET title = ?, contents = ?, time = NOW() WHERE number = ?";
-        Article updatelistArticle = board_action.updateOrDeleteArticle(sql, article, isUpdate);
+        Article updatelistArticle = board_action.updateOrDeleteArticle(sql, String.valueOf(number), title, content);
 
         return updatelistArticle;
     }
+
     // 삭제
-    public Article deleteArticle(Article article, boolean isUpdate){
+//    public Article deleteArticle(String[] article, boolean isUpdate){
+    public Article deleteArticle(int number) {
         String sql = "DELETE FROM text_board WHERE number = ?";
-        Article deletelistArticle = board_action.updateOrDeleteArticle(sql, article,isUpdate);
+        Article deletelistArticle = board_action.updateOrDeleteArticle(sql, String.valueOf(number));
         return deletelistArticle;
     }
 }

@@ -1,10 +1,6 @@
 package Function;
 
 import SQL.DatabaseConnection;
-import commentFunction.Comment_Add;
-import commentFunction.Comment_Delete;
-import commentFunction.Comment_Recommend;
-import commentFunction.Comment_Update;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -87,35 +83,41 @@ public class Board_Action implements Action {
         return article;
     }
     // update / delete
-    public Article updateOrDeleteArticle(String sql, Article article, boolean isUpdate) {
+    public Article updateOrDeleteArticle(String sql, String... article) {
         Connection connection = DatabaseConnection.getConnection();
         boolean foundResults = false;
 
-        System.out.print((isUpdate ? "수정" : "삭제") + "할 게시물 번호 : ");
+        System.out.print("수정/삭제 할 게시물 번호 : ");
         int num = Integer.parseInt(scanner.nextLine());
 
         try {
-            if (isUpdate) {
-                System.out.print("새로운 게시물 제목을 입력해주세요 : ");
-                article.title = scanner.nextLine();
-                System.out.print("새로운 게시물 내용을 입력해주세요 : ");
-                article.contents = scanner.nextLine();
-            }
             PreparedStatement statement = connection.prepareStatement(sql);
-            if (isUpdate) {
-                statement.setString(1, article.title);
-                statement.setString(2, article.contents);
+
+            if (article.length >= 2) {
+                String newTitle = article[0];
+                String newContents = article[1];
+
+                statement.setString(1, newTitle);
+                statement.setString(2, newContents);
                 statement.setInt(3, num);
             } else {
-                statement.setInt(1, num);
+                // 입력받은 제목과 내용이 없을 경우
+                System.out.print("새로운 게시물 제목을 입력해주세요 : ");
+                String newTitle = scanner.nextLine();
+                System.out.print("새로운 게시물 내용을 입력해주세요 : ");
+                String newContents = scanner.nextLine();
+
+                statement.setString(1, newTitle);
+                statement.setString(2, newContents);
+                statement.setInt(3, num);
             }
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows > 0) {
-                System.out.printf("%d번 게시물이 " + (isUpdate ? "수정" : "삭제") + "되었습니다.\n", num);
+                System.out.printf("%d번 게시물이 수정/삭제 되었습니다.\n", num);
                 foundResults = true;
             } else {
-                System.out.println("게시물 " + (isUpdate ? "수정" : "삭제") + "에 실패했습니다.");
+                System.out.println("게시물 수정/삭제에 실패했습니다.");
             }
 
             statement.close();

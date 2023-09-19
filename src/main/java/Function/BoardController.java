@@ -32,12 +32,12 @@ public class BoardController {
     }
 
     public Article update(Article article) {
-        Article updateArticle = queryManager.changeArticle(article);
+        Article updateArticle = queryManager.updateArticle(article);
         return updateArticle;
     }
 
     public Article delete(Article article){
-        Article deleteArticle = queryManager.changeArticle(article);
+        Article deleteArticle = queryManager.deleteArticle(article);
         return deleteArticle;
     }
 }

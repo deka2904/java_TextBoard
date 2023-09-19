@@ -2,11 +2,6 @@ package Function;
 
 public interface Action {
     void add(String nickname);
-    void delete();
-    void detail(String nickname);
-    void list();
-    void search();
-    void update();
     void page(int pageNumber);
     void sort();
     void sign_in();

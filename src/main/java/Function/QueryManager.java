@@ -37,17 +37,9 @@ public class QueryManager {
         return updatelistArticle;
     }
     // 삭제
-    public Article deleteArticle(){
+    public Article deleteArticle(Article article){
         String sql = "DELETE FROM text_board WHERE number = ?";
         Article deletelistArticle = board_action.deletelist(sql);
         return deletelistArticle;
-    }
-
-    public Article changeArticle(Article article) {
-        String sql = "UPDATE text_board SET title = ?, contents = ?, time = NOW() WHERE number = ?";
-        Object[] obj = new Object[3];
-        Article updatelistArticle = board_action.changelist(sql, article);
-
-        return updatelistArticle;
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Board_Print {
     public void board_print(List<Article> articleList){
+        System.out.println("=============================================================================");
         for(Article article : articleList){
             int number = article.getNumber();
             String title = article.getTitle();
@@ -22,6 +23,7 @@ public class Board_Print {
             System.out.println("[시간] : " + article.setTime(time));
             System.out.println("[조회수] : " + article.setView_count(view_count));
             System.out.println("[추천수] : " + article.setText_board_suggestion(text_board_suggestion));
+            System.out.println("=============================================================================");
         }
     }
 

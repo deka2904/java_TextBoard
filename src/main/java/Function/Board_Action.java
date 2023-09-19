@@ -86,66 +86,7 @@ public class Board_Action implements Action {
         }
         return article;
     }
-    // update
-    public Article updatelist(String sql, Article article) {
-        Connection connection = DatabaseConnection.getConnection();
-        boolean foundResults = false; // 결과가 있으면 true로 설정
-        System.out.print("수정할 게시물 번호 : ");
-        int num = Integer.parseInt(scanner.nextLine());
-        try {
-            System.out.print("새로운 게시물 제목을 입력해주세요 : ");
-            article.title = scanner.nextLine();
-            System.out.print("새로운 게시물 내용을 입력해주세요 : ");
-            article.contents = scanner.nextLine();
-
-            PreparedStatement updateStatement = connection.prepareStatement(sql);
-            updateStatement.setString(1, article.title);
-            updateStatement.setString(2, article.contents);
-            updateStatement.setInt(3, num);
-            int updatedRows = updateStatement.executeUpdate();
-            foundResults = true;
-
-            if (updatedRows > 0) {
-                System.out.printf("%d번 게시물이 수정되었습니다.\n", num);
-            } else {
-                System.out.println("게시물 수정에 실패했습니다.");
-            }
-            updateStatement.close();
-
-            if (!foundResults) {
-                System.out.println("해당 번호를 찾을 수 없습니다.");
-            }
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return article;
-    }
-    // delete
-    public Article deletelist(String sql) {
-        Connection connection = DatabaseConnection.getConnection();
-        boolean foundResults = false; // 결과가 있으면 true로 설정
-        System.out.print("삭제할 게시물 번호 : ");
-        int num = Integer.parseInt(scanner.nextLine());
-        try {
-            // SQL DELETE 쿼리 실행
-            PreparedStatement deleteStatement = connection.prepareStatement(sql);
-            deleteStatement.setInt(1,  num);
-            int deletedRows = deleteStatement.executeUpdate();
-            if (deletedRows > 0) {
-                System.out.printf("%d번 게시물이 삭제되었습니다.\n", num);
-                foundResults = true;
-            }
-            if (!foundResults) {
-                System.out.println("해당 번호를 찾을 수 없습니다.");
-            }
-            deleteStatement.close();
-            connection.close();
-        } catch (Exception e) {
-            System.out.println("올바른 번호를 입력해 주세요.");
-        }
-        return article;
-    }
+    // update / delete
     public Article updateOrDeleteArticle(String sql, Article article, boolean isUpdate) {
         Connection connection = DatabaseConnection.getConnection();
         boolean foundResults = false;
@@ -189,7 +130,6 @@ public class Board_Action implements Action {
         }
         return article;
     }
-
     @Override
     public void add(String nickname){
         System.out.print("게시물 제목을 입력해주세요 : ");

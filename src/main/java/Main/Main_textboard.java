@@ -64,12 +64,12 @@ public class Main_textboard {
                     // 게시글 업데이트
                     else if (func.equals("update")) {
                         boardController.list();
-                        boardController.update(article);
+                        boardController.updateOrDelete(article, true);
                     }
                     // 게시글 삭제
                     else if (func.equals("delete")) {
                         boardController.list();
-                        boardController.delete(article);
+                        boardController.updateOrDelete(article, false);
                         boardController.list();
                     }
                     // 게시글을 상세히 조회

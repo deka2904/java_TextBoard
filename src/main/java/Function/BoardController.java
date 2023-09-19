@@ -30,14 +30,15 @@ public class BoardController {
         board_print.board_print(searchedArticleList);
         return searchedArticleList;
     }
+    public Article updateOrDelete(Article article, boolean isUpdate) {
+        Article updatedOrDeletedArticle;
 
-    public Article update(Article article) {
-        Article updateArticle = queryManager.updateArticle(article);
-        return updateArticle;
-    }
+        if (isUpdate) {
+            updatedOrDeletedArticle = queryManager.updateArticle(article, true);
+        } else {
+            updatedOrDeletedArticle = queryManager.deleteArticle(article, false);
+        }
 
-    public Article delete(Article article){
-        Article deleteArticle = queryManager.deleteArticle(article);
-        return deleteArticle;
+        return updatedOrDeletedArticle;
     }
 }

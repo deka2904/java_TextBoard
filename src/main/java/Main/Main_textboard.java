@@ -50,7 +50,7 @@ public class Main_textboard {
                     System.out.println("=============================================================================");
                     // 게시글 추가
                     if (func.equals("add")) {
-                        action.add(nickname);
+                        boardController.add();
                     }
                     // 게시글 전체 제목 조회
                     else if (func.equals("list")) {

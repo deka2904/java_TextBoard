@@ -1,20 +1,33 @@
 package Function;
 
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BoardController {
+    Article article = new Article();
     Scanner scanner = new Scanner(System.in);
     QueryManager queryManager;
     Board_Print board_print;
-
+    int number = 1;
     public BoardController() {
         queryManager = new QueryManager();
         board_print = new Board_Print();
     }
+    public int add(){
+        System.out.print("게시글 제목 : ");
+        String title = scanner.nextLine();
+        System.out.print("게시글 내용 : ");
+        String content = scanner.nextLine();
 
+        int insertArticle = queryManager.insertArticle(title, content, article.getText_board_member_nickname());
+        number++;
+        if (insertArticle > 0) {
+            System.out.println("게시물이 등록되었습니다.");
+        } else {
+            System.out.println("게시물 등록에 실패했습니다.");
+        }
+        return insertArticle;
+    }
     public Article detail(int num) {
         Article article = queryManager.getArticleById(num);
         board_print.board_print(article);
@@ -42,7 +55,7 @@ public class BoardController {
         System.out.print("수정할 게시글 내용 : ");
         String newContent = scanner.nextLine();
 
-        int updatedArticle = queryManager.updateArticle(num, newTitle, newContent);
+        int updatedArticle = queryManager.updateArticle(newTitle, newContent, num);
         boolean foundResults = false;
 
         if (updatedArticle > 0) {

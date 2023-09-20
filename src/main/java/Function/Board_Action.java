@@ -1,5 +1,7 @@
 package Function;
 
+import Function.Action;
+import Function.Article;
 import SQL.DatabaseConnection;
 
 import java.sql.*;

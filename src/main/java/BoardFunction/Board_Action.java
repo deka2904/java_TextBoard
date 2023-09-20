@@ -1,13 +1,10 @@
-package Function;
+package BoardFunction;
 
-import Function.Action;
-import Function.Article;
 import SQL.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Board_Action implements Action {
@@ -57,10 +54,10 @@ public class Board_Action implements Action {
         return articles;
     }
     // detail
-    public Article selectOne(String sql, int num) {
+    public Article selectOne(String sql) {
         Connection connection = DatabaseConnection.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, num);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 article.setNumber(resultSet.getInt("number"));
@@ -86,7 +83,7 @@ public class Board_Action implements Action {
         return article;
     }
     // update / delete
-    public int updateOrDeleteArticle(String sql, Object... article) {
+    public int updateArticle(String sql, Object... article) {
         Connection connection = DatabaseConnection.getConnection();
         int affectedRows;
         int i = 0;

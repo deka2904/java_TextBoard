@@ -1,6 +1,6 @@
 package Main;
 
-import Function.*;
+import BoardFunction.*;
 
 import java.util.Scanner;
 
@@ -50,7 +50,7 @@ public class Main_textboard {
                     System.out.println("=============================================================================");
                     // 게시글 추가
                     if (func.equals("add")) {
-                        boardController.add();
+                        boardController.add(nickname);
                     }
                     // 게시글 전체 제목 조회
                     else if (func.equals("list")) {
@@ -73,15 +73,12 @@ public class Main_textboard {
                     }
                     // 게시글을 상세히 조회
                     else if (func.equals("detail")) {
-                        System.out.print("상세보기 할 게시물 번호를 입력해주세요 : ");
-                        int num = Integer.parseInt(scanner.nextLine());
-                        boardController.detail(num);
+                        boardController.list();
+                        boardController.detail(nickname);
                     }
                     // 게시글 키워드 검색 후 조회
                     else if (func.equals("search")) {
-                        System.out.print("검색 키워드를 입력해주세요: ");
-                        String keyword = scanner.nextLine();
-                        boardController.search(keyword);
+                        boardController.search();
                     }
                     // 게시글 페이지 만들기
                     else if (func.equals("page")) {

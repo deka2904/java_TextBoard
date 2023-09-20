@@ -1,4 +1,4 @@
-package Function;
+package BoardFunction;
 
 public interface Action {
     void add(String nickname);

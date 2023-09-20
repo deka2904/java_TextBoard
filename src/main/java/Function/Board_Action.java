@@ -5,6 +5,7 @@ import SQL.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Board_Action implements Action {
@@ -83,43 +84,30 @@ public class Board_Action implements Action {
         return article;
     }
     // update / delete
-    public Article updateOrDeleteArticle(String sql, String... article) {
+    public int updateOrDeleteArticle(String sql, Object... article) {
         Connection connection = DatabaseConnection.getConnection();
-        boolean foundResults = false;
-
-        System.out.print("수정/삭제 할 게시물 번호 : ");
-        int num = Integer.parseInt(scanner.nextLine());
-
+        int affectedRows;
+        int i = 0;
         try {
-            System.out.print("새로운 게시물 제목을 입력해주세요 : ");
-            article[1] = scanner.nextLine();
-            System.out.print("새로운 게시물 내용을 입력해주세요 : ");
-            article[2] = scanner.nextLine();
-
+            //반복문 PrepareStatement 완성
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, article[1]);
-            statement.setString(2, article[2]);
-            statement.setInt(3, num);
-            int affectedRows = statement.executeUpdate();
+            for(Object str : article){
 
-            if (affectedRows > 0) {
-                System.out.printf("%d번 게시물이 수정/삭제 되었습니다.\n", num);
-                foundResults = true;
-            } else {
-                System.out.println("게시물 수정/삭제에 실패했습니다.");
+                if (str instanceof Integer){
+                    i++;
+                    statement.setInt(i, (Integer) str);
+                }else{
+                    i++;
+                    statement.setString(i, (String) str);
+                }
             }
-
+            affectedRows = statement.executeUpdate();
             statement.close();
-
-            if (!foundResults) {
-                System.out.println("해당 번호를 찾을 수 없습니다.");
-            }
-
             connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return article;
+        return affectedRows;
     }
     @Override
     public void add(String nickname){

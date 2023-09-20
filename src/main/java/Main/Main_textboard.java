@@ -54,7 +54,6 @@ public class Main_textboard {
                     }
                     // 게시글 전체 제목 조회
                     else if (func.equals("list")) {
-//                        action.list();
                         boardController.list();
                     }
                     // 게시글 정렬 후 조회
@@ -64,24 +63,22 @@ public class Main_textboard {
                     // 게시글 업데이트
                     else if (func.equals("update")) {
                         boardController.list();
-                        boardController.update(article);
+                        boardController.update();
                     }
                     // 게시글 삭제
                     else if (func.equals("delete")) {
                         boardController.list();
-                        boardController.delete(article);
+                        boardController.delete();
                         boardController.list();
                     }
                     // 게시글을 상세히 조회
                     else if (func.equals("detail")) {
-//                        action.detail(nickname);
                         System.out.print("상세보기 할 게시물 번호를 입력해주세요 : ");
                         int num = Integer.parseInt(scanner.nextLine());
                         boardController.detail(num);
                     }
                     // 게시글 키워드 검색 후 조회
                     else if (func.equals("search")) {
-//                        action.search();
                         System.out.print("검색 키워드를 입력해주세요: ");
                         String keyword = scanner.nextLine();
                         boardController.search(keyword);

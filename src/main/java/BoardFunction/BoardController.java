@@ -31,12 +31,12 @@ public class BoardController {
         }
         return insertArticle;
     }
-    public Article detail(String nickname) {
+    public Article detail() {
         System.out.print("상세보기 할 게시물 번호를 입력해주세요 : ");
         int num = Integer.parseInt(scanner.nextLine());
         Article article = queryManager.getArticleById(num);
         board_print.board_print(article);
-        commendController.Commendlist(num, nickname);
+        commendController.Commendlist(num);
         System.out.print("상세보기 기능을 선택해주세요(1. 댓글 등록, 2. 추천, 3. 수정, 4. 삭제, 5. 목록으로) : ");
         int number = Integer.parseInt(scanner.nextLine());
         switch (number){

@@ -108,6 +108,22 @@ public class Board_Action implements Action {
         }
         return affectedRows;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @Override
     public void add(String nickname){
         System.out.print("게시물 제목을 입력해주세요 : ");

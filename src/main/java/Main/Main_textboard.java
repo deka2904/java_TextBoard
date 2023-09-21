@@ -1,6 +1,7 @@
 package Main;
 
 import BoardFunction.*;
+import MemberFunction.Member_Controller;
 
 import java.util.Scanner;
 
@@ -12,7 +13,7 @@ public class Main_textboard {
         Action action = new Board_Action();
         Article article = new Article();
         BoardController boardController = new BoardController();
-
+        Member_Controller member_controller = new Member_Controller();
         System.out.println("[[----------게시판----------]]");
         while (true) {
             System.out.println("[1. 회원가입 2. 로그인 3. 종료]");
@@ -28,10 +29,10 @@ public class Main_textboard {
             String nickname = "";
             switch (menuChoice) {
                 case 1:
-                    action.sign_in();
+                    member_controller.sign_in();
                     continue;
                 case 2:
-                    nickname = action.login();
+                    nickname = member_controller.login();
                     break;
                 case 3:
                     System.out.println("프로그램을 종료합니다.");
@@ -86,7 +87,7 @@ public class Main_textboard {
                     }
                     // 종료
                     else if (func.equals("logout")) {
-                        action.logout();
+                        member_controller.logout();
                         break;
                     }
                 }

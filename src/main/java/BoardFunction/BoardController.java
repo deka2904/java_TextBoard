@@ -19,6 +19,35 @@ public class BoardController {
         commendQueryManager = new CommendQueryManager();
         board_print = new Board_Print();
     }
+    public void sort(){
+        String column = "";
+        String sortOrder = "";
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("=============================================================================");
+        System.out.print("정렬 대상을 선택해주세요. (1. 번호,  2. 조회수) : ");
+        int sort1_num = Integer.parseInt(scanner.nextLine());
+        if (sort1_num == 1){
+            column = "number"; // 번호를 선택한 경우
+        } else if(sort1_num == 2){
+            column = "view_count"; // 조회수를 선택한 경우
+        }
+        System.out.println("=============================================================================");
+        System.out.print("정렬 방법을 선택해주세요. (1. 오름차순,  2. 내림차순) : ");
+        int sort2_num = Integer.parseInt(scanner.nextLine());
+        System.out.println("=============================================================================");
+        if (sort2_num == 1){
+            sortOrder = "ASC"; // 오름차순을 선택한 경우
+        } else if(sort2_num == 2){
+            sortOrder = "DESC"; // 내림차순을 선택한 경우
+        }
+        Article sort = boardQueryManager.sortArticle(column, sortOrder);
+        if (sort > 0) {
+            board_print.board_print();
+            System.out.println("정렬되었습니다.");
+        } else {
+            System.out.println("??????????????");
+        }
+    }
     public int add(String nickname){
         System.out.print("게시글 제목 : ");
         String title = scanner.nextLine();

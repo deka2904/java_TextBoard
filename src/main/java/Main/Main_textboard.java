@@ -59,7 +59,8 @@ public class Main_textboard {
                     }
                     // 게시글 정렬 후 조회
                     else if (func.equals("sort")) {
-                        action.sort();
+//                        action.sort();
+                        boardController.sort();
                     }
                     // 게시글 업데이트
                     else if (func.equals("update")) {

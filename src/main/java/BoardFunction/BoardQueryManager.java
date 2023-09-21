@@ -48,4 +48,10 @@ public class BoardQueryManager {
         int deletelistArticle = board_action.updateArticle(sql, number);
         return deletelistArticle;
     }
+
+    public Article sortArticle(String column, String sortOrder){
+        String sql = "SELECT * FROM text_board ORDER BY ? ?";
+        Article sortArticle = board_action.sortArticle(sql, column, sortOrder);
+        return sortArticle;
+    }
 }

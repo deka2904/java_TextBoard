@@ -110,7 +110,37 @@ public class Board_Action implements Action {
         }
         return affectedRows;
     }
-
+    public Article sortArticle(String sql, Object... article){
+        Connection connection = DatabaseConnection.getConnection();
+        ResultSet resultSet = null;
+        int result = 0;
+        int i = 0;
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            for (Object str : article) {
+                if (str instanceof Integer) {
+                    i++;
+                    statement.setInt(i, (Integer) str);
+                } else if (str instanceof Boolean) {
+                    i++;
+                    statement.setBoolean(i, (Boolean) str);
+                } else {
+                    i++;
+                    statement.setString(i, (String) str);
+                }
+            }
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                result = 1;
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
 
 

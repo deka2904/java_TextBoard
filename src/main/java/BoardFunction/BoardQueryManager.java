@@ -28,8 +28,12 @@ public class BoardQueryManager {
     public Article getArticleById(int num) {
         String sql = "SELECT * FROM text_board WHERE number = " + num;
         Article article = board_action.selectOne(sql);
-
         return article;
+    }
+    public int view_count(int number){
+        String sql = "UPDATE text_board SET view_count = view_count + 1 WHERE number = ?";
+        int viewCountArticle = board_action.updateArticle(sql, number);
+        return viewCountArticle;
     }
     // 수정
     public int updateArticle(String title, String content, int number) {

@@ -74,7 +74,7 @@ public class Main_textboard {
                     // 게시글을 상세히 조회
                     else if (func.equals("detail")) {
                         boardController.list();
-                        boardController.detail();
+                        boardController.detail(nickname);
                     }
                     // 게시글 키워드 검색 후 조회
                     else if (func.equals("search")) {

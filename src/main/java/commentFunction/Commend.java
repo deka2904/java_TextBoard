@@ -9,9 +9,11 @@ public class Commend {
     public Commend(){
 
     }
-    public Commend(String commend, String time, String comment_member_nickname){
+    public Commend(int id, String commend, String time, int board_number, String comment_member_nickname){
+        this.id = id;
         this.commend = commend;
         this.time = time;
+        this.board_number = board_number;
         this.comment_member_nickname = comment_member_nickname;
     }
     public int getId() {

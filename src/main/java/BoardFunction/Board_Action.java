@@ -91,13 +91,15 @@ public class Board_Action implements Action {
             //반복문 PrepareStatement 완성
             PreparedStatement statement = connection.prepareStatement(sql);
             for(Object str : article){
-
                 if (str instanceof Integer){
                     i++;
-                    statement.setInt(i, (Integer) str);
+                    statement.setInt(i, (Integer)str);
+                }else if(str instanceof Boolean){
+                    i++;
+                    statement.setBoolean(i, (Boolean)str);
                 }else{
                     i++;
-                    statement.setString(i, (String) str);
+                    statement.setString(i, (String)str);
                 }
             }
             affectedRows = statement.executeUpdate();

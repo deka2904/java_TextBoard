@@ -1,6 +1,7 @@
 package BoardFunction;
 
 import commentFunction.CommendController;
+import commentFunction.CommendQueryManager;
 
 import java.util.List;
 import java.util.Scanner;
@@ -9,11 +10,13 @@ public class BoardController {
     Article article = new Article();
     Scanner scanner = new Scanner(System.in);
     BoardQueryManager boardQueryManager;
+    CommendQueryManager commendQueryManager;
     Board_Print board_print;
     CommendController commendController = new CommendController();
     int number = 1;
     public BoardController() {
         boardQueryManager = new BoardQueryManager();
+        commendQueryManager = new CommendQueryManager();
         board_print = new Board_Print();
     }
     public int add(String nickname){
@@ -34,9 +37,10 @@ public class BoardController {
     public Article detail(String nickname) {
         System.out.print("상세보기 할 게시물 번호를 입력해주세요 : ");
         int num = Integer.parseInt(scanner.nextLine());
-        Article article = boardQueryManager.getArticleById(num);
+        boardQueryManager.view_count(num);
         Outter:
         while (true){
+            Article article = boardQueryManager.getArticleById(num);
             board_print.board_print(article);
             commendController.Commendlist(num);
             System.out.print("상세보기 기능을 선택해주세요(1. 댓글 등록, 2. 추천, 3. 수정, 4. 삭제, 5. 목록으로) : ");

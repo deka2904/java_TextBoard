@@ -6,12 +6,8 @@ import MemberFunction.Member_Controller;
 import java.util.Scanner;
 
 public class Main_textboard {
-    public static final int pageNumber = 1; // 원하는 페이지 번호를 지정하세요
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        // 인터페이스 action 호출
-        Action action = new Board_Action();
-        Article article = new Article();
         BoardController boardController = new BoardController();
         Member_Controller member_controller = new Member_Controller();
         System.out.println("[[----------게시판----------]]");
@@ -59,7 +55,6 @@ public class Main_textboard {
                     }
                     // 게시글 정렬 후 조회
                     else if (func.equals("sort")) {
-//                        action.sort();
                         boardController.sort();
                     }
                     // 게시글 업데이트
@@ -84,7 +79,8 @@ public class Main_textboard {
                     }
                     // 게시글 페이지 만들기
                     else if (func.equals("page")) {
-                        action.page(pageNumber);
+//                        action.page(pageNumber);
+                        boardController.page();
                     }
                     // 종료
                     else if (func.equals("logout")) {

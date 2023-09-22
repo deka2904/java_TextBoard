@@ -49,9 +49,14 @@ public class BoardQueryManager {
         return deletelistArticle;
     }
 
-    public Article sortArticle(String column, String sortOrder){
-        String sql = "SELECT * FROM text_board ORDER BY ? ?";
-        Article sortArticle = board_action.sortArticle(sql, column, sortOrder);
+    public List<Article> sortArticle(String column, String sortOrder){
+        String sql = "SELECT * FROM text_board ORDER BY " + column + " " + sortOrder;
+        List<Article> sortArticle = board_action.ArticleList(sql);
         return sortArticle;
+    }
+    public List<Article> pageArticle(int PAGE_SIZE, int offset){
+        String sql = "SELECT * FROM text_board LIMIT " + PAGE_SIZE + " OFFSET " + offset;
+        List<Article> pageArticle = board_action.ArticleList(sql);
+        return pageArticle;
     }
 }

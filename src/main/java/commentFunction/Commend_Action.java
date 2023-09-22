@@ -1,6 +1,5 @@
 package commentFunction;
 
-import BoardFunction.Article;
 import SQL.DatabaseConnection;
 
 import java.sql.Connection;
@@ -29,16 +28,9 @@ public class Commend_Action {
             // 자원 해제
             preparedStatement.close();
             resultSet.close();
+            connection.close();
         }catch(SQLException e){
             // 발생할 수 있는 SQLException 처리
-        } finally{
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                // 닫을 때 발생할 수 있는 SQLException 처리
-            }
         }
         return commends;
     }

@@ -3,7 +3,7 @@ package MemberFunction;
 public class MemberQueryManager {
     Member_Action member_action = new Member_Action();
     public Member CheckId(String id){
-        String sql = "SELECT id FROM member WHERE id = ?";
+        String sql = "SELECT * FROM member WHERE id = ?";
         Member checkid = member_action.checkMenber(sql, id);
         return checkid;
     }

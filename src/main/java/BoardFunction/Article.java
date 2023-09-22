@@ -8,12 +8,19 @@ public class Article {
    String time;
    int view_count;
    int text_board_suggestion;
+   int page;
+   int perPageNum;
 
    public Article() {
 
    }
 
-   public Article(int number, String title, String contents, String text_board_member_nickname, String time, int view_count, int text_board_suggestion) {
+   @Override
+   public String toString() {
+      return "현재 페이지 [page=" + page + ", perPageNum=" + perPageNum + "]";
+   }
+
+   public Article(int number, String title, String contents, String text_board_member_nickname, String time, int view_count, int text_board_suggestion, int page, int perPageNum) {
       this.number = number;
       this.title = title;
       this.contents = contents;
@@ -21,6 +28,23 @@ public class Article {
       this.time = time;
       this.view_count = view_count;
       this.text_board_suggestion = text_board_suggestion;
+      this.page = page;
+      this.perPageNum = perPageNum;
+   }
+   public int getPage() {
+      return page;
+   }
+
+   public void setPage(int page) {
+      this.page = page;
+   }
+
+   public int getPerPageNum() {
+      return perPageNum;
+   }
+
+   public void setPerPageNum(int perPageNum) {
+      this.perPageNum = perPageNum;
    }
 
    public int getNumber() {

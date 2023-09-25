@@ -5,8 +5,8 @@ import MemberFunction.Member_Controller;
 
 import java.util.Scanner;
 
-public class Main_textboard {
-    public static void main(String[] args) {
+public class TextBoard {
+    public void start(){
         Scanner scanner = new Scanner(System.in);
         BoardController boardController = new BoardController();
         Member_Controller member_controller = new Member_Controller();

@@ -1,19 +1,15 @@
 package Main;
 
-import Function.*;
+import BoardFunction.*;
+import MemberFunction.Member_Controller;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main_textboard {
-    public static final int pageNumber = 1; // 원하는 페이지 번호를 지정하세요
-    public static int number = 1;
-    public static final ArrayList<Article> boardList = new ArrayList<>();
-    public static void main(String[] args) {
+public class TextBoard {
+    public void start(){
         Scanner scanner = new Scanner(System.in);
-        // 인터페이스 action 호출
-        Action action = new Board_Action();
-
+        BoardController boardController = new BoardController();
+        Member_Controller member_controller = new Member_Controller();
         System.out.println("[[----------게시판----------]]");
         while (true) {
             System.out.println("[1. 회원가입 2. 로그인 3. 종료]");
@@ -29,10 +25,10 @@ public class Main_textboard {
             String nickname = "";
             switch (menuChoice) {
                 case 1:
-                    action.sign_in();
+                    member_controller.sign_in();
                     continue;
                 case 2:
-                    nickname = action.login();
+                    nickname = member_controller.login();
                     break;
                 case 3:
                     System.out.println("프로그램을 종료합니다.");
@@ -51,39 +47,44 @@ public class Main_textboard {
                     System.out.println("=============================================================================");
                     // 게시글 추가
                     if (func.equals("add")) {
-                        action.add(nickname);
+                        boardController.add(nickname);
                     }
                     // 게시글 전체 제목 조회
                     else if (func.equals("list")) {
-                        action.list();
+                        boardController.list();
                     }
                     // 게시글 정렬 후 조회
                     else if (func.equals("sort")) {
-                        action.sort();
+                        boardController.sort();
                     }
                     // 게시글 업데이트
                     else if (func.equals("update")) {
-                        action.update();
+                        boardController.list();
+                        boardController.update();
                     }
                     // 게시글 삭제
                     else if (func.equals("delete")) {
-                        action.delete();
+                        boardController.list();
+                        boardController.delete();
+                        boardController.list();
                     }
-                    // 게시글 제목으로 조회
+                    // 게시글을 상세히 조회
                     else if (func.equals("detail")) {
-                        action.detail(nickname);
+                        boardController.list();
+                        boardController.detail(nickname);
                     }
                     // 게시글 키워드 검색 후 조회
                     else if (func.equals("search")) {
-                        action.search();
+                        boardController.search();
                     }
                     // 게시글 페이지 만들기
                     else if (func.equals("page")) {
-                        action.page(pageNumber);
+//                        action.page(pageNumber);
+                        boardController.page();
                     }
                     // 종료
                     else if (func.equals("logout")) {
-                        action.logout();
+                        member_controller.logout();
                         break;
                     }
                 }

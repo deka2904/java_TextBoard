@@ -5,7 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    public static Connection getConnection() {
+    public static Connection
+    getConnection() {
         Connection connection = null;
         //jdbc:mysql://127.0.0.1:3306/text_board
         String server = "127.0.0.1"; // 서버 주소
